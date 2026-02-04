@@ -105,11 +105,35 @@ resource "aws_instance" "portfolio" {
 
               # Create web directory
               mkdir -p /var/www/portfolio
-              chown -R www-data:www-data /var/www/portfolio
+              chown -R ubuntu:ubuntu /var/www/portfolio
+
+              # Configure Nginx site
+              cat > /etc/nginx/sites-available/portfolio <<'NGINX'
+              server {
+                  listen 80;
+                  server_name ${var.domain_name} www.${var.domain_name};
+
+                  root /var/www/portfolio;
+                  index index.html;
+
+                  location / {
+                      try_files $uri $uri/ /index.html;
+                  }
+
+                  location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$ {
+                      expires 30d;
+                      add_header Cache-Control "public, immutable";
+                  }
+              }
+              NGINX
+
+              # Enable site and remove default
+              ln -sf /etc/nginx/sites-available/portfolio /etc/nginx/sites-enabled/portfolio
+              rm -f /etc/nginx/sites-enabled/default
 
               # Start Nginx
               systemctl enable nginx
-              systemctl start nginx
+              systemctl restart nginx
 
               echo "Bootstrap complete" > /var/log/user-data-complete.log
               EOF
