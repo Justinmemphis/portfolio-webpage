@@ -9,3 +9,9 @@ variable "project_name" {
   type        = string
   default     = "devops-portfolio"
 }
+
+variable "github_repo" {
+  description = "GitHub repository in 'owner/repo' format for OIDC trust"
+  type        = string
+  default     = "Justinmemphis/claude-portfolio-webpage"
+}

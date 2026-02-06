@@ -1,0 +1,79 @@
+name: PR Checks
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  AWS_REGION: us-east-1
+
+jobs:
+  react-checks:
+    name: React - Test & Build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: devops-portfolio
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: devops-portfolio/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: npm test
+        env:
+          CI: true
+
+      - name: Build production bundle
+        run: npm run build
+
+  terraform-checks:
+    name: Terraform - Format, Validate, Plan
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: devops-portfolio/terraform
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Format Check
+        run: terraform fmt -check -recursive
+
+      - name: Terraform Init (no backend)
+        run: terraform init -backend=false
+
+      - name: Terraform Validate
+        run: terraform validate
+
+      - name: Configure AWS Credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::010955985414:role/devops-portfolio-github-actions-ci
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Plan
+        run: terraform plan -var-file=ci.tfvars -no-color -input=false

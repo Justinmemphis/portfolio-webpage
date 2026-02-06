@@ -18,6 +18,11 @@ output "lock_table_arn" {
   value       = aws_dynamodb_table.terraform_locks.arn
 }
 
+output "github_actions_role_arn" {
+  description = "IAM role ARN for GitHub Actions to assume via OIDC"
+  value       = aws_iam_role.github_actions_ci.arn
+}
+
 output "backend_config" {
   description = "Copy this into your root module's backend block"
   value       = <<-EOT
