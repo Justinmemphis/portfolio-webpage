@@ -1,6 +1,6 @@
 # TODO — Enterprise Terraform Migration
 
-## Current Phase: 6 (CI/CD)
+## Current Phase: 7 (Monitoring)
 
 ### Phase 1 Complete ✓
 Remote state backend deployed — S3 bucket + DynamoDB lock table, state migrated successfully.
@@ -17,6 +17,9 @@ DNS module extracted — Route 53 hosted zone lookup, A record, and www CNAME mo
 ### Phase 5 Complete ✓
 Security hardening — inline SG rules converted to discrete `aws_security_group_rule` resources, IAM policy scoped (`AssociateAddress` restricted to project EIP, `DescribeAddresses` kept at `*` per API requirement).
 
+### Phase 6 Complete ✓
+CI/CD pipeline — GitHub Actions workflow runs React tests/build and Terraform fmt/validate/plan on pushes to `main` and PRs. OIDC auth via bootstrap module (no hardcoded secrets).
+
 ---
 
 ## Remaining Phases
@@ -28,7 +31,7 @@ Security hardening — inline SG rules converted to discrete `aws_security_group
 | 3 | Compute Module (Launch template, ASG) | **Complete** |
 | 4 | DNS Module | **Complete** |
 | 5 | Security Hardening (discrete SG rules, IAM) | **Complete** |
-| 6 | CI/CD (GitHub Actions: `fmt -check`, `validate`, `plan` on PRs) | Pending |
+| 6 | CI/CD (GitHub Actions: `fmt -check`, `validate`, `plan` on PRs) | **Complete** |
 | 7 | Monitoring (CloudWatch alarms, SNS) | Pending |
 
 ---
@@ -40,6 +43,8 @@ Security hardening — inline SG rules converted to discrete `aws_security_group
 - `devops-portfolio/terraform/modules/networking/` — VPC, subnets, IGW, route tables
 - `devops-portfolio/terraform/modules/compute/` — Launch template, ASG, SG, IAM, user data template
 - `devops-portfolio/terraform/modules/dns/` — Route 53 hosted zone lookup, A record, www CNAME
+- `devops-portfolio/terraform/bootstrap/github_oidc.tf` — OIDC provider data source, CI IAM role + policies
+- `.github/workflows/pr-checks.yml` — GitHub Actions CI/CD workflow
 - `MIGRATION-PLAN.md` — full migration plan with drift analysis
 - `AWS-COST-ANALYSIS.md` — cost breakdown per phase ($0.00 delta total)
 
