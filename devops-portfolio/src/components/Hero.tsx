@@ -2,27 +2,27 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import './Hero.css';
 
+const terminalLines = [
+  { text: '$ whoami', delay: 0 },
+  { text: '> Justin Carter - DevOps Engineer', delay: 800 },
+  { text: '$ cat certifications.txt', delay: 1600 },
+  { text: '✓ AWS Solutions Architect Associate', delay: 2200 },
+  { text: '✓ AWS Cloud Practitioner', delay: 2600 },
+  { text: '✓ CompTIA Security+', delay: 3000 },
+  { text: '✓ Cisco CCNA', delay: 3400 },
+  { text: '⏳ HashiCorp Terraform Associate (In Progress)', delay: 3800 },
+  { text: '$ echo $MISSION', delay: 4600 },
+  { text: '> Automating infrastructure. Securing cloud environments.', delay: 5200 },
+  { text: '$ deployment --status', delay: 6000 },
+  { text: '✓ Infrastructure provisioned', delay: 6400 },
+  { text: '✓ Security scans passed', delay: 6800 },
+  { text: '✓ CI/CD pipeline active', delay: 7200 },
+  { text: '✓ Ready for production', delay: 7600 }
+];
+
 const Hero: React.FC = () => {
   const [currentLine, setCurrentLine] = useState(0);
   const [displayedText, setDisplayedText] = useState<string[]>([]);
-
-  const terminalLines = [
-    { text: '$ whoami', delay: 0 },
-    { text: '> Justin Carter - DevOps Engineer', delay: 800 },
-    { text: '$ cat certifications.txt', delay: 1600 },
-    { text: '✓ AWS Solutions Architect Associate', delay: 2200 },
-    { text: '✓ AWS Cloud Practitioner', delay: 2600 },
-    { text: '✓ CompTIA Security+', delay: 3000 },
-    { text: '✓ Cisco CCNA', delay: 3400 },
-    { text: '⏳ HashiCorp Terraform Associate (In Progress)', delay: 3800 },
-    { text: '$ echo $MISSION', delay: 4600 },
-    { text: '> Automating infrastructure. Securing cloud environments.', delay: 5200 },
-    { text: '$ deployment --status', delay: 6000 },
-    { text: '✓ Infrastructure provisioned', delay: 6400 },
-    { text: '✓ Security scans passed', delay: 6800 },
-    { text: '✓ CI/CD pipeline active', delay: 7200 },
-    { text: '✓ Ready for production', delay: 7600 }
-  ];
 
   useEffect(() => {
     const timers = terminalLines.map((line, index) => {
