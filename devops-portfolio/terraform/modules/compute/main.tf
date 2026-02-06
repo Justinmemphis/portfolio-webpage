@@ -20,41 +20,49 @@ resource "aws_security_group" "web" {
   description = "Security group for portfolio web server"
   vpc_id      = var.vpc_id
 
-  ingress {
-    description = "SSH"
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = [var.allowed_ssh_cidr]
-  }
-
-  ingress {
-    description = "HTTP"
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  ingress {
-    description = "HTTPS"
-    from_port   = 443
-    to_port     = 443
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  egress {
-    description = "All outbound traffic"
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
   tags = {
     Name = "${var.project_name}-web-sg"
   }
+}
+
+resource "aws_security_group_rule" "ssh_ingress" {
+  type              = "ingress"
+  description       = "SSH"
+  from_port         = 22
+  to_port           = 22
+  protocol          = "tcp"
+  cidr_blocks       = [var.allowed_ssh_cidr]
+  security_group_id = aws_security_group.web.id
+}
+
+resource "aws_security_group_rule" "http_ingress" {
+  type              = "ingress"
+  description       = "HTTP"
+  from_port         = 80
+  to_port           = 80
+  protocol          = "tcp"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = aws_security_group.web.id
+}
+
+resource "aws_security_group_rule" "https_ingress" {
+  type              = "ingress"
+  description       = "HTTPS"
+  from_port         = 443
+  to_port           = 443
+  protocol          = "tcp"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = aws_security_group.web.id
+}
+
+resource "aws_security_group_rule" "all_egress" {
+  type              = "egress"
+  description       = "All outbound traffic"
+  from_port         = 0
+  to_port           = 0
+  protocol          = "-1"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = aws_security_group.web.id
 }
 
 # --- IAM Role for EIP self-association ---
@@ -84,14 +92,23 @@ resource "aws_iam_role_policy" "eip_association" {
 
   policy = jsonencode({
     Version = "2012-10-17"
-    Statement = [{
-      Effect = "Allow"
-      Action = [
-        "ec2:AssociateAddress",
-        "ec2:DescribeAddresses"
-      ]
-      Resource = "*"
-    }]
+    Statement = [
+      {
+        Sid      = "AllowDescribeAddresses"
+        Effect   = "Allow"
+        Action   = "ec2:DescribeAddresses"
+        Resource = "*"
+      },
+      {
+        Sid    = "AllowAssociateEIP"
+        Effect = "Allow"
+        Action = "ec2:AssociateAddress"
+        Resource = [
+          "arn:aws:ec2:${var.aws_region}:*:elastic-ip/${var.eip_allocation_id}",
+          "arn:aws:ec2:${var.aws_region}:*:instance/*"
+        ]
+      }
+    ]
   })
 }
 

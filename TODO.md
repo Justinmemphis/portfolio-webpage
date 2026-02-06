@@ -1,6 +1,6 @@
 # TODO — Enterprise Terraform Migration
 
-## Current Phase: 5 (Security Hardening)
+## Current Phase: 6 (CI/CD)
 
 ### Phase 1 Complete ✓
 Remote state backend deployed — S3 bucket + DynamoDB lock table, state migrated successfully.
@@ -14,6 +14,9 @@ Compute module deployed — launch template, ASG (min/max 1), SG in new VPC, IAM
 ### Phase 4 Complete ✓
 DNS module extracted — Route 53 hosted zone lookup, A record, and www CNAME moved into `modules/dns/`. State migrated, `terraform plan` confirmed zero changes.
 
+### Phase 5 Complete ✓
+Security hardening — inline SG rules converted to discrete `aws_security_group_rule` resources, IAM policy scoped (`AssociateAddress` restricted to project EIP, `DescribeAddresses` kept at `*` per API requirement).
+
 ---
 
 ## Remaining Phases
@@ -24,7 +27,7 @@ DNS module extracted — Route 53 hosted zone lookup, A record, and www CNAME mo
 | 2 | Networking Module (VPC, public subnets, IGW) | **Complete** |
 | 3 | Compute Module (Launch template, ASG) | **Complete** |
 | 4 | DNS Module | **Complete** |
-| 5 | Security Hardening (discrete SG rules, IAM) | Pending |
+| 5 | Security Hardening (discrete SG rules, IAM) | **Complete** |
 | 6 | CI/CD (GitHub Actions: `fmt -check`, `validate`, `plan` on PRs) | Pending |
 | 7 | Monitoring (CloudWatch alarms, SNS) | Pending |
 
@@ -53,3 +56,4 @@ DNS module extracted — Route 53 hosted zone lookup, A record, and www CNAME mo
 
 - [ ] Change the page title and favicon
 - [ ] Add Google Analytics and website monitoring/testing software
+- [ ] Server autopilot: unattended-upgrades, automatic security patches, log rotation, Certbot auto-renewal verification, disk usage alerts
