@@ -31,25 +31,12 @@ resource "aws_eip" "portfolio" {
   }
 }
 
-# Look up existing Route 53 hosted zone
-data "aws_route53_zone" "portfolio" {
-  name = var.domain_name
-}
+# --- DNS ---
 
-# A record for root domain
-resource "aws_route53_record" "root" {
-  zone_id = data.aws_route53_zone.portfolio.zone_id
-  name    = var.domain_name
-  type    = "A"
-  ttl     = 300
-  records = [aws_eip.portfolio.public_ip]
-}
-
-# A record for www subdomain
-resource "aws_route53_record" "www" {
-  zone_id = data.aws_route53_zone.portfolio.zone_id
-  name    = "www.${var.domain_name}"
-  type    = "CNAME"
-  ttl     = 300
-  records = [var.domain_name]
+module "dns" {
+  source        = "./modules/dns"
+  domain_name   = var.domain_name
+  eip_public_ip = aws_eip.portfolio.public_ip
+  project_name  = "devops-portfolio"
+  environment   = var.environment
 }
