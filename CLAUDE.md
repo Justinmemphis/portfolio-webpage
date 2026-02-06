@@ -59,5 +59,4 @@ Configured in `package.json` extending `react-app` and `react-app/jest`.
 
 ## TODO
 
-- Change the page title and favicon
-- Set up GitHub Actions CI/CD pipeline
+See [TODO.md](TODO.md) for the full task list.

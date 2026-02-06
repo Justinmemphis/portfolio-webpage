@@ -85,3 +85,10 @@ Compute module files are written. Replaces raw `aws_instance` + inline SG with l
 - No ALB (keep EIP + Certbot)
 - CI/CD will run `terraform fmt -check`, `terraform validate`, `terraform plan` on all PRs
 - No hardcoded secrets — OIDC auth for GitHub Actions
+
+---
+
+## Finishing
+
+- [ ] Change the page title and favicon
+- [ ] Add Google Analytics and website monitoring/testing software
