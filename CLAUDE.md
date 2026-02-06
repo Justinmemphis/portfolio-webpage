@@ -2,6 +2,10 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Rules
+
+- **Never push to any remote branch without explicit user approval.** Always ask before running `git push`.
+
 ## Project Overview
 
 DevOps portfolio website for Justin Carter. React/TypeScript frontend with Terraform-managed AWS infrastructure. The two are independently managed — Terraform provisions the EC2 instance and networking, while the React build output is deployed separately via SCP.
@@ -47,7 +51,7 @@ The EC2 user data script configures Nginx automatically. GitHub Actions CI/CD is
 - **Framer Motion** for animations. **React Icons** for iconography.
 - **Styling**: Custom CSS with CSS variables defining a dark/cyberpunk theme (no CSS framework). Component-scoped CSS files.
 - **Terraform**: AWS provider ~> 5.0. Resources: EC2 (Ubuntu 22.04), security group, Elastic IP, Route 53 A/CNAME records. User data script bootstraps Nginx, Node.js 20.x, Certbot, fail2ban, and UFW.
-- **No CI/CD pipeline yet** — GitHub Actions is planned but not implemented.
+- **CI/CD**: GitHub Actions runs React tests/build and Terraform fmt/validate/plan on pushes to `main` and PRs. OIDC auth (no hardcoded secrets).
 
 ## Terraform Variables
 
