@@ -54,6 +54,9 @@ CI/CD pipeline — GitHub Actions workflow runs React tests/build and Terraform 
 - No ALB (keep EIP + Certbot)
 - CI/CD will run `terraform fmt -check`, `terraform validate`, `terraform plan` on all PRs
 - No hardcoded secrets — OIDC auth for GitHub Actions
+- Bootstrap module uses local state (intentional — it manages the S3 backend itself). Apply bootstrap changes manually before CI can use them
+- CI uses Node 25 to match local dev environment (npm 11)
+- `ci.tfvars` has placeholder `key_name = "ci-plan-only"` — swap to real key pair name if plan drift noise bothers you
 
 ---
 
