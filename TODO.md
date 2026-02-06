@@ -62,3 +62,4 @@ CI/CD pipeline — GitHub Actions workflow runs React tests/build and Terraform 
 - [ ] Change the page title and favicon
 - [ ] Add Google Analytics and website monitoring/testing software
 - [ ] Server autopilot: unattended-upgrades, automatic security patches, log rotation, Certbot auto-renewal verification, disk usage alerts
+- [ ] Enterprise testing: unit tests (Jest/RTL for React components), integration tests (API/component interaction), E2E tests (Cypress or Playwright), Terraform tests (terraform test or Terratest), security scanning (tfsec/checkov for IaC, npm audit in CI), load/smoke tests post-deploy
