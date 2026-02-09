@@ -23,9 +23,11 @@ CI/CD pipeline — GitHub Actions workflow runs React tests/build and Terraform 
 ### Phase 7 Complete ✓
 Monitoring — CloudWatch alarms (CPU high, status check failed, ASG health, disk usage) with SNS email notifications. CloudWatch agent installed via user data for disk metrics. ASG group metrics enabled. CI IAM policy updated with CloudWatch/SNS read permissions.
 
+**Follow-up:** Verify CloudWatch agent is running on the instance and `CWAgent` metrics appear in CloudWatch console. The disk usage alarm will stay in `INSUFFICIENT_DATA` until confirmed.
+
 ---
 
-## Remaining Phases
+## Phases Summary
 
 | Phase | Description | Status |
 |---|---|---|
@@ -36,6 +38,9 @@ Monitoring — CloudWatch alarms (CPU high, status check failed, ASG health, dis
 | 5 | Security Hardening (discrete SG rules, IAM) | **Complete** |
 | 6 | CI/CD (GitHub Actions: `fmt -check`, `validate`, `plan` on PRs) | **Complete** |
 | 7 | Monitoring (CloudWatch alarms, SNS) | **Complete** |
+| 8 | Server Hardening (unattended-upgrades, log rotation, Certbot verification) | Pending |
+| 9 | Testing & Security Scanning (Jest/RTL, Playwright, tfsec, npm audit) | Pending |
+| 10 | Polish & Content (page title, favicon, project descriptions, GA) | Pending |
 
 ---
 
@@ -64,9 +69,34 @@ Monitoring — CloudWatch alarms (CPU high, status check failed, ASG health, dis
 
 ---
 
-## Finishing
+## Phase 8 — Server Hardening
+
+- [ ] `unattended-upgrades` for automatic security patches
+- [ ] Log rotation configuration (Nginx, app logs, CloudWatch agent logs)
+- [ ] Certbot auto-renewal verification (`systemctl status certbot.timer`)
+- [ ] Harden SSH config (disable password auth, root login — verify in user data)
+
+## Phase 9 — Testing & Security Scanning
+
+- [ ] Unit tests: Jest + React Testing Library for React components
+- [ ] E2E tests: Playwright or Cypress for smoke tests
+- [ ] IaC security scanning: tfsec or checkov in CI pipeline
+- [ ] `npm audit` in CI workflow
+- [ ] Terraform native tests (`terraform test`) for module validation
+
+## Phase 10 — Polish & Content
 
 - [ ] Change the page title and favicon
-- [ ] Add Google Analytics and website monitoring/testing software
-- [ ] Server autopilot: unattended-upgrades, automatic security patches, log rotation, Certbot auto-renewal verification, disk usage alerts
-- [ ] Enterprise testing: unit tests (Jest/RTL for React components), integration tests (API/component interaction), E2E tests (Cypress or Playwright), Terraform tests (terraform test or Terratest), security scanning (tfsec/checkov for IaC, npm audit in CI), load/smoke tests post-deploy
+- [ ] Update portfolio project description to reflect all infrastructure work (Phases 1–7: remote state, VPC, ASG, DNS module, security hardening, CI/CD with OIDC, CloudWatch monitoring)
+- [ ] Add Google Analytics
+- [ ] Update README with architecture diagram or summary of what was built
+
+---
+
+## Suggested Future Enhancements
+
+- **CD pipeline**: Extend GitHub Actions to auto-deploy build artifacts to EC2 on merge to main (SCP or SSM Run Command)
+- **Backup strategy**: EBS snapshots on a schedule via AWS Backup or lifecycle policy
+- **Cost monitoring**: AWS Budgets alarm for monthly spend threshold
+- **WAF / rate limiting**: Nginx rate limiting or AWS WAF if traffic grows
+- **Blue/green deploys**: Instance refresh with launch template versioning for zero-downtime updates
