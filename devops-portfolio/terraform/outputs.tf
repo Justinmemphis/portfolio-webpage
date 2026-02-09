@@ -22,3 +22,8 @@ output "website_url" {
   description = "URL to access the portfolio"
   value       = "https://${var.domain_name}"
 }
+
+output "sns_topic_arn" {
+  description = "ARN of the SNS alerts topic"
+  value       = module.monitoring.sns_topic_arn
+}

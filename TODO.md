@@ -1,6 +1,6 @@
 # TODO — Enterprise Terraform Migration
 
-## Current Phase: 7 (Monitoring)
+## All Phases Complete
 
 ### Phase 1 Complete ✓
 Remote state backend deployed — S3 bucket + DynamoDB lock table, state migrated successfully.
@@ -20,6 +20,9 @@ Security hardening — inline SG rules converted to discrete `aws_security_group
 ### Phase 6 Complete ✓
 CI/CD pipeline — GitHub Actions workflow runs React tests/build and Terraform fmt/validate/plan on pushes to `main` and PRs. OIDC auth via bootstrap module (no hardcoded secrets).
 
+### Phase 7 Complete ✓
+Monitoring — CloudWatch alarms (CPU high, status check failed, ASG health, disk usage) with SNS email notifications. CloudWatch agent installed via user data for disk metrics. ASG group metrics enabled. CI IAM policy updated with CloudWatch/SNS read permissions.
+
 ---
 
 ## Remaining Phases
@@ -32,7 +35,7 @@ CI/CD pipeline — GitHub Actions workflow runs React tests/build and Terraform 
 | 4 | DNS Module | **Complete** |
 | 5 | Security Hardening (discrete SG rules, IAM) | **Complete** |
 | 6 | CI/CD (GitHub Actions: `fmt -check`, `validate`, `plan` on PRs) | **Complete** |
-| 7 | Monitoring (CloudWatch alarms, SNS) | Pending |
+| 7 | Monitoring (CloudWatch alarms, SNS) | **Complete** |
 
 ---
 
@@ -45,6 +48,7 @@ CI/CD pipeline — GitHub Actions workflow runs React tests/build and Terraform 
 - `devops-portfolio/terraform/modules/dns/` — Route 53 hosted zone lookup, A record, www CNAME
 - `devops-portfolio/terraform/bootstrap/github_oidc.tf` — OIDC provider data source, CI IAM role + policies
 - `.github/workflows/pr-checks.yml` — GitHub Actions CI/CD workflow
+- `devops-portfolio/terraform/modules/monitoring/` — SNS topic, CloudWatch alarms (CPU, status check, ASG health, disk)
 - `MIGRATION-PLAN.md` — full migration plan with drift analysis
 - `AWS-COST-ANALYSIS.md` — cost breakdown per phase ($0.00 delta total)
 

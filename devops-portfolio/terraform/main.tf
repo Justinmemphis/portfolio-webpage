@@ -31,6 +31,16 @@ resource "aws_eip" "portfolio" {
   }
 }
 
+# --- Monitoring ---
+
+module "monitoring" {
+  source       = "./modules/monitoring"
+  asg_name     = module.compute.asg_name
+  alert_email  = var.alert_email
+  project_name = "devops-portfolio"
+  environment  = var.environment
+}
+
 # --- DNS ---
 
 module "dns" {

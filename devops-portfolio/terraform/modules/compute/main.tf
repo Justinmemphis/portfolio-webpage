@@ -112,6 +112,11 @@ resource "aws_iam_role_policy" "eip_association" {
   })
 }
 
+resource "aws_iam_role_policy_attachment" "cloudwatch_agent" {
+  role       = aws_iam_role.instance.name
+  policy_arn = "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
+}
+
 resource "aws_iam_instance_profile" "instance" {
   name = "${var.project_name}-instance-profile"
   role = aws_iam_role.instance.name
@@ -174,6 +179,14 @@ resource "aws_autoscaling_group" "web" {
   max_size            = 1
   desired_capacity    = 1
   vpc_zone_identifier = var.subnet_ids
+
+  enabled_metrics = [
+    "GroupInServiceInstances",
+    "GroupDesiredCapacity",
+    "GroupPendingInstances",
+    "GroupTerminatingInstances",
+    "GroupTotalInstances",
+  ]
 
   launch_template {
     id      = aws_launch_template.web.id

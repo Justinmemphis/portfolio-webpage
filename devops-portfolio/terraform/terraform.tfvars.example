@@ -7,3 +7,4 @@ instance_type    = "t3.micro"
 key_name         = "your-key-pair-name"
 allowed_ssh_cidr = "YOUR_IP/32"  # Replace with your IP for security
 domain_name      = "justinmemphis.com"
+alert_email      = ""                  # Email for CloudWatch alarm notifications

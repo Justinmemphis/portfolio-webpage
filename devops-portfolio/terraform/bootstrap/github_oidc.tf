@@ -137,6 +137,26 @@ resource "aws_iam_role_policy" "ci_terraform_plan" {
         Resource = "*"
       },
       {
+        Sid    = "CloudWatchReadOnly"
+        Effect = "Allow"
+        Action = [
+          "cloudwatch:DescribeAlarms",
+          "cloudwatch:GetMetricData",
+          "cloudwatch:ListTagsForResource"
+        ]
+        Resource = "*"
+      },
+      {
+        Sid    = "SNSReadOnly"
+        Effect = "Allow"
+        Action = [
+          "sns:GetTopicAttributes",
+          "sns:ListTagsForResource",
+          "sns:GetSubscriptionAttributes"
+        ]
+        Resource = "*"
+      },
+      {
         Sid      = "STSGetCallerIdentity"
         Effect   = "Allow"
         Action   = "sts:GetCallerIdentity"
