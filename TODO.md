@@ -23,7 +23,10 @@ CI/CD pipeline — GitHub Actions workflow runs React tests/build and Terraform 
 ### Phase 7 Complete ✓
 Monitoring — CloudWatch alarms (CPU high, status check failed, ASG health, disk usage) with SNS email notifications. CloudWatch agent installed via user data for disk metrics. ASG group metrics enabled. CI IAM policy updated with CloudWatch/SNS read permissions.
 
-**Follow-up:** Verify CloudWatch agent is running on the instance and `CWAgent` metrics appear in CloudWatch console. The disk usage alarm will stay in `INSUFFICIENT_DATA` until confirmed.
+**Follow-up complete:** CloudWatch agent confirmed running; `CWAgent` disk metrics verified in CloudWatch console.
+
+### Phase 8 Complete ✓
+Server hardening — unattended-upgrades (security-only, auto-reboot at 08:00 UTC / 2am Central), SSH hardening via `/etc/ssh/sshd_config.d/99-hardening.conf` (no root login, no password auth, MaxAuthTries 3, idle timeout), Certbot auto-renewal timer enabled, log rotation for CloudWatch agent and app logs. All in user data template.
 
 ---
 
@@ -38,7 +41,7 @@ Monitoring — CloudWatch alarms (CPU high, status check failed, ASG health, dis
 | 5 | Security Hardening (discrete SG rules, IAM) | **Complete** |
 | 6 | CI/CD (GitHub Actions: `fmt -check`, `validate`, `plan` on PRs) | **Complete** |
 | 7 | Monitoring (CloudWatch alarms, SNS) | **Complete** |
-| 8 | Server Hardening (unattended-upgrades, log rotation, Certbot verification) | Pending |
+| 8 | Server Hardening (unattended-upgrades, log rotation, Certbot verification) | **Complete** |
 | 9 | Testing & Security Scanning (Jest/RTL, Playwright, tfsec, npm audit) | Pending |
 | 10 | Polish & Content (page title, favicon, project descriptions, GA) | Pending |
 
@@ -69,12 +72,9 @@ Monitoring — CloudWatch alarms (CPU high, status check failed, ASG health, dis
 
 ---
 
-## Phase 8 — Server Hardening
+## Phase 8 Complete ✓
 
-- [ ] `unattended-upgrades` for automatic security patches
-- [ ] Log rotation configuration (Nginx, app logs, CloudWatch agent logs)
-- [ ] Certbot auto-renewal verification (`systemctl status certbot.timer`)
-- [ ] Harden SSH config (disable password auth, root login — verify in user data)
+Server hardening — unattended-upgrades (security-only, auto-reboot at 08:00 UTC / 2am Central), SSH hardening via sshd drop-in config (no root login, no password auth, MaxAuthTries 3), Certbot timer enabled, log rotation for CloudWatch agent and app logs. All changes in user data template; requires instance replacement to take effect.
 
 ## Phase 9 — Testing & Security Scanning
 
