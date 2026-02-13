@@ -93,6 +93,15 @@ Server hardening — unattended-upgrades (security-only, auto-reboot at 08:00 UT
 
 ---
 
+## LinkedIn Promotion
+
+- [ ] Add portfolio as a **Featured** item on LinkedIn (link to [justinmemphis.com](https://justinmemphis.com))
+- [ ] Add as a **Project** on LinkedIn — title, description highlighting Terraform/AWS/CI/CD work, link to live site and GitHub repo
+
+Profile: [linkedin.com/in/justin-carter-memphis](https://www.linkedin.com/in/justin-carter-memphis/)
+
+---
+
 ## Suggested Future Enhancements
 
 - **CD pipeline**: Extend GitHub Actions to auto-deploy build artifacts to EC2 on merge to main (SCP or SSM Run Command)
