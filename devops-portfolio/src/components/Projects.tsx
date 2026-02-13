@@ -18,19 +18,19 @@ interface Project {
 const Projects: React.FC = () => {
   const projects: Project[] = [
     {
-      title: 'This Portfolio - Infrastructure as Code',
-      description: 'Complete AWS deployment pipeline built with Terraform, featuring automated CI/CD, security hardening, and monitoring.',
-      tags: ['Terraform', 'AWS EC2', 'GitHub Actions', 'Nginx', 'SSL/TLS'],
+      title: 'AWS Infrastructure Portfolio — Terraform IaC',
+      description: 'Production-grade AWS infrastructure built entirely with Terraform across 8 phases: VPC networking, auto-scaling compute, modular DNS, CI/CD with OIDC auth, CloudWatch observability, and server hardening — all managed as code.',
+      tags: ['Terraform', 'AWS', 'VPC', 'Auto Scaling', 'GitHub Actions', 'OIDC', 'CloudWatch', 'Route 53', 'Nginx', 'SSL/TLS'],
       icon: <SiTerraform />,
       status: 'live',
-      github: '#',
+      github: 'https://github.com/Justinmemphis/claude-portfolio-webpage',
       demo: 'https://justinmemphis.com',
       highlights: [
-        'Terraform modules for reproducible infrastructure',
-        'Automated deployment pipeline with GitHub Actions',
-        'Security hardening (fail2ban, UFW, security groups)',
-        'SSL/TLS with Let\'s Encrypt auto-renewal',
-        'CloudWatch monitoring and alerting'
+        'Modular Terraform: VPC, compute, DNS, monitoring — each a reusable module',
+        'CI/CD via GitHub Actions with OIDC auth (zero hardcoded secrets)',
+        'CloudWatch alarms + SNS alerting (CPU, disk, status checks, ASG health)',
+        'Server hardening: unattended-upgrades, SSH lockdown, fail2ban, UFW',
+        'Remote state with S3 backend + DynamoDB locking'
       ]
     }
   ];
@@ -107,7 +107,7 @@ const Projects: React.FC = () => {
               <div className="project-highlights">
                 <strong>Key Features:</strong>
                 <ul>
-                  {project.highlights.slice(0, 3).map((highlight, idx) => (
+                  {project.highlights.slice(0, 5).map((highlight, idx) => (
                     <li key={idx}>{highlight}</li>
                   ))}
                 </ul>

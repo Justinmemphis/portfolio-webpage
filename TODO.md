@@ -43,7 +43,7 @@ Server hardening — unattended-upgrades (security-only, auto-reboot at 08:00 UT
 | 7 | Monitoring (CloudWatch alarms, SNS) | **Complete** |
 | 8 | Server Hardening (unattended-upgrades, log rotation, Certbot verification) | **Complete** |
 | 9 | Testing & Security Scanning (Jest/RTL, Playwright, tfsec, npm audit) | Pending |
-| 10 | Polish & Content (page title, favicon, project descriptions, GA) | Pending |
+| 10 | Polish & Content (page title, favicon, project descriptions, GA) | **Complete** |
 
 ---
 
@@ -84,12 +84,12 @@ Server hardening — unattended-upgrades (security-only, auto-reboot at 08:00 UT
 - [ ] `npm audit` in CI workflow
 - [ ] Terraform native tests (`terraform test`) for module validation
 
-## Phase 10 — Polish & Content
+## Phase 10 Complete ✓
 
-- [ ] Change the page title and favicon
-- [ ] Update portfolio project description to reflect all infrastructure work (Phases 1–7: remote state, VPC, ASG, DNS module, security hardening, CI/CD with OIDC, CloudWatch monitoring)
-- [ ] Add Google Analytics
-- [ ] Update README with architecture diagram or summary of what was built
+- [x] Change the page title and favicon
+- [x] Add Google Analytics (GA4) and Ahrefs analytics
+- [x] Update portfolio project description to reflect all infrastructure work (Phases 1–8)
+- [x] Update README with architecture summary
 
 ---
 
