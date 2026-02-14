@@ -13,5 +13,5 @@ variable "project_name" {
 variable "github_repo" {
   description = "GitHub repository in 'owner/repo' format for OIDC trust"
   type        = string
-  default     = "Justinmemphis/claude-portfolio-webpage"
+  default     = "Justinmemphis/portfolio-webpage"
 }
