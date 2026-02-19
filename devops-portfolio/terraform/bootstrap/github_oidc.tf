@@ -165,3 +165,48 @@ resource "aws_iam_role_policy" "ci_terraform_plan" {
     ]
   })
 }
+
+# --- IAM Policy: Deploy (S3 upload + SSM trigger) ---
+
+resource "aws_iam_role_policy" "ci_deploy" {
+  name = "${var.project_name}-ci-deploy"
+  role = aws_iam_role.github_actions_ci.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Sid    = "S3DeployBucketAccess"
+        Effect = "Allow"
+        Action = [
+          "s3:PutObject",
+          "s3:GetObject",
+          "s3:DeleteObject",
+          "s3:ListBucket"
+        ]
+        Resource = [
+          "arn:aws:s3:::devops-portfolio-deploy-artifacts-${local.account_id}",
+          "arn:aws:s3:::devops-portfolio-deploy-artifacts-${local.account_id}/*"
+        ]
+      },
+      {
+        Sid    = "SSMSendCommand"
+        Effect = "Allow"
+        Action = "ssm:SendCommand"
+        Resource = [
+          "arn:aws:ssm:${var.aws_region}::document/AWS-RunShellScript",
+          "arn:aws:ec2:${var.aws_region}:${local.account_id}:instance/*"
+        ]
+      },
+      {
+        Sid    = "SSMGetCommandStatus"
+        Effect = "Allow"
+        Action = [
+          "ssm:GetCommandInvocation",
+          "ssm:ListCommandInvocations"
+        ]
+        Resource = "*"
+      }
+    ]
+  })
+}

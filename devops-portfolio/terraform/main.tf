@@ -1,3 +1,24 @@
+data "aws_caller_identity" "current" {}
+
+# --- S3 Deploy Artifacts Bucket ---
+
+resource "aws_s3_bucket" "deploy_artifacts" {
+  bucket = "devops-portfolio-deploy-artifacts-${data.aws_caller_identity.current.account_id}"
+
+  tags = {
+    Name = "devops-portfolio-deploy-artifacts"
+  }
+}
+
+resource "aws_s3_bucket_public_access_block" "deploy_artifacts" {
+  bucket = aws_s3_bucket.deploy_artifacts.id
+
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
+}
+
 # --- Networking ---
 
 module "networking" {
@@ -20,6 +41,7 @@ module "compute" {
   aws_region        = var.aws_region
   project_name      = "devops-portfolio"
   environment       = var.environment
+  deploy_bucket_arn = aws_s3_bucket.deploy_artifacts.arn
 }
 
 # Elastic IP for consistent public IP

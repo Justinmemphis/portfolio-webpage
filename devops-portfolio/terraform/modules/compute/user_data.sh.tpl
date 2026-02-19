@@ -161,4 +161,9 @@ LREOF
 mkdir -p /var/log/portfolio
 chown ubuntu:ubuntu /var/log/portfolio
 
+# Install and enable SSM agent
+snap install amazon-ssm-agent --classic
+systemctl enable snap.amazon-ssm-agent.amazon-ssm-agent.service
+systemctl start snap.amazon-ssm-agent.amazon-ssm-agent.service
+
 echo "Bootstrap complete" > /var/log/user-data-complete.log

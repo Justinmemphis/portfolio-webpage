@@ -47,3 +47,8 @@ variable "environment" {
   description = "Environment name"
   type        = string
 }
+
+variable "deploy_bucket_arn" {
+  description = "ARN of the S3 bucket used for deploy artifacts"
+  type        = string
+}

@@ -12,6 +12,8 @@ permissions:
 
 env:
   AWS_REGION: us-east-1
+  DEPLOY_BUCKET: devops-portfolio-deploy-artifacts-010955985414
+  EC2_NAME_TAG: devops-portfolio-webserver
 
 jobs:
   react-checks:
@@ -99,12 +101,45 @@ jobs:
           name: react-build
           path: build/
 
-      - name: Setup SSH key
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/deploy_key
-          chmod 600 ~/.ssh/deploy_key
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::010955985414:role/devops-portfolio-github-actions-ci
+          aws-region: ${{ env.AWS_REGION }}
 
-      - name: Deploy to EC2
+      - name: Upload build to S3
         run: |
-          scp -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -r build/* ubuntu@${{ secrets.EC2_HOST }}:/var/www/portfolio/
+          aws s3 sync build/ s3://${{ env.DEPLOY_BUCKET }}/ --delete
+
+      - name: Deploy via SSM
+        run: |
+          INSTANCE_ID=$(aws ec2 describe-instances \
+            --filters \
+              "Name=tag:Name,Values=${{ env.EC2_NAME_TAG }}" \
+              "Name=instance-state-name,Values=running" \
+            --query "Reservations[0].Instances[0].InstanceId" \
+            --output text)
+
+          echo "Deploying to instance: $INSTANCE_ID"
+
+          COMMAND_ID=$(aws ssm send-command \
+            --instance-ids "$INSTANCE_ID" \
+            --document-name "AWS-RunShellScript" \
+            --parameters "commands=[\"aws s3 sync s3://${{ env.DEPLOY_BUCKET }}/ /var/www/portfolio/ --delete --region ${{ env.AWS_REGION }}\"]" \
+            --query "Command.CommandId" \
+            --output text)
+
+          echo "SSM command ID: $COMMAND_ID"
+
+          aws ssm wait command-executed \
+            --command-id "$COMMAND_ID" \
+            --instance-id "$INSTANCE_ID"
+
+          STATUS=$(aws ssm get-command-invocation \
+            --command-id "$COMMAND_ID" \
+            --instance-id "$INSTANCE_ID" \
+            --query "Status" \
+            --output text)
+
+          echo "Deploy status: $STATUS"
+          [ "$STATUS" = "Success" ]
