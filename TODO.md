@@ -20,6 +20,8 @@ Security hardening — inline SG rules converted to discrete `aws_security_group
 ### Phase 6 Complete ✓
 CI/CD pipeline — GitHub Actions workflow runs React tests/build and Terraform fmt/validate/plan on pushes to `main` and PRs. OIDC auth via bootstrap module (no hardcoded secrets).
 
+**Follow-up complete:** Auto-deploy added — on merge to `main`, the deploy job builds the React app, uploads to S3 (`devops-portfolio-deploy-artifacts-010955985414`), then triggers an SSM Run Command on EC2 to sync from S3 to `/var/www/portfolio/`. No port 22 required. `index.html` is force-copied before sync to work around `aws s3 sync` size-based skipping (content hashes are always 8 chars, so file size never changes between builds).
+
 ### Phase 7 Complete ✓
 Monitoring — CloudWatch alarms (CPU high, status check failed, ASG health, disk usage) with SNS email notifications. CloudWatch agent installed via user data for disk metrics. ASG group metrics enabled. CI IAM policy updated with CloudWatch/SNS read permissions.
 
@@ -39,7 +41,7 @@ Server hardening — unattended-upgrades (security-only, auto-reboot at 08:00 UT
 | 3 | Compute Module (Launch template, ASG) | **Complete** |
 | 4 | DNS Module | **Complete** |
 | 5 | Security Hardening (discrete SG rules, IAM) | **Complete** |
-| 6 | CI/CD (GitHub Actions: `fmt -check`, `validate`, `plan` on PRs) | **Complete** |
+| 6 | CI/CD (GitHub Actions: `fmt -check`, `validate`, `plan` on PRs; auto-deploy to EC2 via S3+SSM) | **Complete** |
 | 7 | Monitoring (CloudWatch alarms, SNS) | **Complete** |
 | 8 | Server Hardening (unattended-upgrades, log rotation, Certbot verification) | **Complete** |
 | 9 | Testing & Security Scanning (Jest/RTL, Playwright, tfsec, npm audit) | Pending |
@@ -102,9 +104,17 @@ Profile: [linkedin.com/in/justin-carter-memphis](https://www.linkedin.com/in/jus
 
 ---
 
+## Content & UX Tasks
+
+- [ ] **Review contact/email form** — evaluate whether the email submission form is working well enough to keep; improve it or remove it
+- [ ] **Add resume to webpage** — link or embed a downloadable resume file
+- [ ] **Update project description** — review the portfolio project card to reflect recent changes (SSM deploy, S3 artifacts bucket, Twitter removal, CI/CD auto-deploy)
+
+---
+
 ## Suggested Future Enhancements
 
-- **CD pipeline**: Extend GitHub Actions to auto-deploy build artifacts to EC2 on merge to main (SCP or SSM Run Command)
+- ~~**CD pipeline**: Extend GitHub Actions to auto-deploy build artifacts to EC2 on merge to main (SCP or SSM Run Command)~~ **Done** — S3 + SSM deploy implemented
 - **Backup strategy**: EBS snapshots on a schedule via AWS Backup or lifecycle policy
 - **Cost monitoring**: AWS Budgets alarm for monthly spend threshold
 - **WAF / rate limiting**: Nginx rate limiting or AWS WAF if traffic grows
