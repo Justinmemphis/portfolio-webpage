@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { FaMapMarkerAlt, FaLinkedin, FaGithub, FaTwitter } from 'react-icons/fa';
+import { FaMapMarkerAlt, FaLinkedin, FaGithub } from 'react-icons/fa';
 import './Contact.css';
 
 const Contact: React.FC = () => {
@@ -59,7 +59,7 @@ const Contact: React.FC = () => {
                   </div>
                 </div>
               </div>
-              <p className="contact-note">Reach out to me on LinkedIn or Twitter</p>
+              <p className="contact-note">Reach out to me on LinkedIn or GitHub</p>
             </div>
 
             <div className="social-links card">
@@ -82,15 +82,6 @@ const Contact: React.FC = () => {
                 >
                   <FaGithub />
                   <span>GitHub</span>
-                </a>
-                <a 
-                  href="https://twitter.com/JustinMemphis42" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="social-link"
-                >
-                  <FaTwitter />
-                  <span>Twitter</span>
                 </a>
               </div>
             </div>

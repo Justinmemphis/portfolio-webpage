@@ -17,7 +17,6 @@ declare module 'react-icons/fa' {
   export const FaMapMarkerAlt: IconType;
   export const FaLinkedin: IconType;
   export const FaGithub: IconType;
-  export const FaTwitter: IconType;
   export const FaHeart: IconType;
   export const FaAws: IconType;
   export const FaDocker: IconType;
