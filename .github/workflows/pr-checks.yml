@@ -43,6 +43,14 @@ jobs:
       - name: Build production bundle
         run: npm run build
 
+      - name: Upload build artifact
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: actions/upload-artifact@v4
+        with:
+          name: react-build
+          path: devops-portfolio/build/
+          retention-days: 1
+
   terraform-checks:
     name: Terraform - Format, Validate, Plan
     runs-on: ubuntu-latest
@@ -77,3 +85,27 @@ jobs:
 
       - name: Terraform Plan
         run: terraform plan -var-file=ci.tfvars -no-color -input=false
+
+  deploy:
+    name: Deploy to EC2
+    runs-on: ubuntu-latest
+    needs: react-checks
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: react-build
+          path: build/
+
+      - name: Setup SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -H "${{ secrets.EC2_HOST }}" >> ~/.ssh/known_hosts
+
+      - name: Deploy to EC2
+        run: |
+          scp -i ~/.ssh/deploy_key -r build/* ubuntu@${{ secrets.EC2_HOST }}:/var/www/portfolio/
