@@ -136,7 +136,7 @@ jobs:
           COMMAND_ID=$(aws ssm send-command \
             --instance-ids "$INSTANCE_ID" \
             --document-name "AWS-RunShellScript" \
-            --parameters "commands=[\"aws s3 sync s3://${{ env.DEPLOY_BUCKET }}/ /var/www/portfolio/ --delete --region ${{ env.AWS_REGION }}\"]" \
+            --parameters "commands=[\"aws s3 cp s3://${{ env.DEPLOY_BUCKET }}/index.html /var/www/portfolio/index.html --region ${{ env.AWS_REGION }} && aws s3 sync s3://${{ env.DEPLOY_BUCKET }}/ /var/www/portfolio/ --delete --region ${{ env.AWS_REGION }}\"]" \
             --query "Command.CommandId" \
             --output text)
 
