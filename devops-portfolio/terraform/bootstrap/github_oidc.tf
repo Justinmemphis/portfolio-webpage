@@ -161,6 +161,18 @@ resource "aws_iam_role_policy" "ci_terraform_plan" {
         Effect   = "Allow"
         Action   = "sts:GetCallerIdentity"
         Resource = "*"
+      },
+      {
+        Sid    = "S3DeployBucketReadForPlan"
+        Effect = "Allow"
+        Action = [
+          "s3:Get*",
+          "s3:List*"
+        ]
+        Resource = [
+          "arn:aws:s3:::devops-portfolio-deploy-artifacts-${local.account_id}",
+          "arn:aws:s3:::devops-portfolio-deploy-artifacts-${local.account_id}/*"
+        ]
       }
     ]
   })
