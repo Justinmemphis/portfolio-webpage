@@ -105,6 +105,13 @@ jobs:
         run: npm run build
         working-directory: devops-portfolio
 
+      - name: Inspect build output
+        run: |
+          echo "=== devops-portfolio/build/ ==="
+          ls -la devops-portfolio/build/
+          echo "=== devops-portfolio/build/static/js/ ==="
+          ls -la devops-portfolio/build/static/js/ 2>/dev/null || echo "static/js/ not found"
+
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
