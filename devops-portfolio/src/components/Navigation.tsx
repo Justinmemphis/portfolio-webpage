@@ -61,11 +61,10 @@ const Navigation: React.FC = () => {
               {item.label}
             </a>
           ))}
-          <a 
-            href="/justin-carter-resume.pdf" 
+          <a
+            href="/resume.pdf"
             className="nav-link nav-cta"
-            target="_blank"
-            rel="noopener noreferrer"
+            download
           >
             Resume
           </a>

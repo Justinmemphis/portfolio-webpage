@@ -1,72 +1,90 @@
-# TODO — Enterprise Terraform Migration
-
-## All Phases Complete
-
-### Phase 1 Complete ✓
-Remote state backend deployed — S3 bucket + DynamoDB lock table, state migrated successfully.
-
-### Phase 2 Complete ✓
-Networking module deployed — VPC (`10.0.0.0/16`), 2 public subnets (`us-east-1a`, `us-east-1b`), IGW, route tables.
-
-### Phase 3 Complete ✓
-Compute module deployed — launch template, ASG (min/max 1), SG in new VPC, IAM instance profile. Site re-deployed and Certbot re-configured on new instance.
-
-### Phase 4 Complete ✓
-DNS module extracted — Route 53 hosted zone lookup, A record, and www CNAME moved into `modules/dns/`. State migrated, `terraform plan` confirmed zero changes.
-
-### Phase 5 Complete ✓
-Security hardening — inline SG rules converted to discrete `aws_security_group_rule` resources, IAM policy scoped (`AssociateAddress` restricted to project EIP, `DescribeAddresses` kept at `*` per API requirement).
-
-### Phase 6 Complete ✓
-CI/CD pipeline — GitHub Actions workflow runs React tests/build and Terraform fmt/validate/plan on pushes to `main` and PRs. OIDC auth via bootstrap module (no hardcoded secrets).
-
-**Follow-up complete:** Auto-deploy added — on merge to `main`, the deploy job builds the React app, uploads to S3 (`devops-portfolio-deploy-artifacts-010955985414`), then triggers an SSM Run Command on EC2 to sync from S3 to `/var/www/portfolio/`. No port 22 required. `index.html` is force-copied before sync to work around `aws s3 sync` size-based skipping (content hashes are always 8 chars, so file size never changes between builds).
-
-### Phase 7 Complete ✓
-Monitoring — CloudWatch alarms (CPU high, status check failed, ASG health, disk usage) with SNS email notifications. CloudWatch agent installed via user data for disk metrics. ASG group metrics enabled. CI IAM policy updated with CloudWatch/SNS read permissions.
-
-**Follow-up complete:** CloudWatch agent confirmed running; `CWAgent` disk metrics verified in CloudWatch console.
-
-### Phase 8 Complete ✓
-Server hardening — unattended-upgrades (security-only, auto-reboot at 08:00 UTC / 2am Central), SSH hardening via `/etc/ssh/sshd_config.d/99-hardening.conf` (no root login, no password auth, MaxAuthTries 3, idle timeout), Certbot auto-renewal timer enabled, log rotation for CloudWatch agent and app logs. All in user data template.
-
----
+# TODO — DevOps Portfolio
 
 ## Phases Summary
 
 | Phase | Description | Status |
 |---|---|---|
-| 1 | Remote State Backend | **Complete** |
-| 2 | Networking Module (VPC, public subnets, IGW) | **Complete** |
+| 1 | Remote State Backend (S3 + DynamoDB) | **Complete** |
+| 2 | Networking Module (VPC, subnets, IGW) | **Complete** |
 | 3 | Compute Module (Launch template, ASG) | **Complete** |
 | 4 | DNS Module | **Complete** |
 | 5 | Security Hardening (discrete SG rules, IAM) | **Complete** |
-| 6 | CI/CD (GitHub Actions: `fmt -check`, `validate`, `plan` on PRs; auto-deploy to EC2 via S3+SSM) | **Complete** |
+| 6 | CI/CD (GitHub Actions, OIDC, auto-deploy via S3 + SSM) | **Complete** |
 | 7 | Monitoring (CloudWatch alarms, SNS) | **Complete** |
-| 8 | Server Hardening (unattended-upgrades, log rotation, Certbot verification) | **Complete** |
-| 9 | Testing & Security Scanning (Jest/RTL, Playwright, tfsec, npm audit) | Pending |
-| 10 | Polish & Content (page title, favicon, project descriptions, GA) | **Complete** |
+| 8 | Server Hardening (unattended-upgrades, SSH, Certbot, log rotation) | **Complete** |
+| 9 | Testing & Security Scanning | **Pending** |
+| 10 | Polish & Content | **Complete** |
+| 11 | Content & UX | **In Progress** |
 
 ---
 
-## Key Files Created
+### Phase 1: Remote State Backend ✓
+S3 bucket + DynamoDB lock table deployed; Terraform state migrated successfully.
+
+### Phase 2: Networking Module ✓
+VPC (`10.0.0.0/16`), 2 public subnets (`us-east-1a`, `us-east-1b`), IGW, route tables.
+
+### Phase 3: Compute Module ✓
+Launch template, ASG (min/max 1), SG in new VPC, IAM instance profile. Site re-deployed; Certbot re-configured on new instance.
+
+### Phase 4: DNS Module ✓
+Route 53 hosted zone lookup, A record, and www CNAME extracted into `modules/dns/`. State migrated, `terraform plan` confirmed zero changes.
+
+### Phase 5: Security Hardening ✓
+Inline SG rules converted to discrete `aws_security_group_rule` resources. IAM policy scoped (`AssociateAddress` restricted to project EIP; `DescribeAddresses` kept at `*` per API requirement).
+
+### Phase 6: CI/CD ✓
+GitHub Actions: `fmt -check`, `validate`, `plan` on PRs; auto-deploy on merge to `main` via S3 + SSM Run Command (no port 22 required). OIDC auth (no hardcoded secrets). `index.html` force-copied before sync to work around `aws s3 sync` size-based skipping.
+
+### Phase 7: Monitoring ✓
+CloudWatch alarms (CPU high, status check failed, ASG health, disk usage) with SNS email notifications. CloudWatch agent installed via user data; `CWAgent` disk metrics verified in console. ASG group metrics enabled.
+
+### Phase 8: Server Hardening ✓
+Unattended-upgrades (security-only, auto-reboot 08:00 UTC / 2am Central), SSH hardening via sshd drop-in (no root login, no password auth, MaxAuthTries 3, idle timeout), Certbot auto-renewal timer, log rotation for CloudWatch agent and app logs. All in user data template.
+
+### Phase 9: Testing & Security Scanning (Pending)
+
+- [ ] Unit tests: Jest + React Testing Library for React components
+- [ ] E2E tests: Playwright or Cypress smoke tests
+- [ ] IaC security scanning: tfsec or checkov in CI pipeline
+- [ ] `npm audit` in CI workflow
+- [ ] Terraform native tests (`terraform test`) for module validation
+
+### Phase 10: Polish & Content ✓
+
+- [x] Change page title and favicon
+- [x] Add Google Analytics (GA4) and Ahrefs analytics
+- [x] Update portfolio project description to reflect all infrastructure work (Phases 1–8)
+- [x] Update README with architecture summary
+
+### Phase 11: Content & UX
+
+- [x] Add portfolio as Featured item and Project on LinkedIn
+- [x] Remove contact form (replaced with social links only)
+- [x] Add resume to `public/` and wire up download links (nav, footer, hero)
+- [ ] Update portfolio project card to reflect SSM deploy, S3 artifacts bucket, CI/CD auto-deploy, Twitter removal
+
+---
+
+## Key Files
 
 - `devops-portfolio/terraform/bootstrap/` — S3 + DynamoDB for state backend
 - `devops-portfolio/terraform/backend.tf` — S3 backend config
 - `devops-portfolio/terraform/modules/networking/` — VPC, subnets, IGW, route tables
 - `devops-portfolio/terraform/modules/compute/` — Launch template, ASG, SG, IAM, user data template
 - `devops-portfolio/terraform/modules/dns/` — Route 53 hosted zone lookup, A record, www CNAME
-- `devops-portfolio/terraform/bootstrap/github_oidc.tf` — OIDC provider data source, CI IAM role + policies
+- `devops-portfolio/terraform/bootstrap/github_oidc.tf` — OIDC provider, CI IAM role + policies
 - `.github/workflows/pr-checks.yml` — GitHub Actions CI/CD workflow
-- `devops-portfolio/terraform/modules/monitoring/` — SNS topic, CloudWatch alarms (CPU, status check, ASG health, disk)
+- `devops-portfolio/terraform/modules/monitoring/` — SNS topic, CloudWatch alarms
+- `devops-portfolio/public/resume.pdf` — downloadable resume
 - `MIGRATION-PLAN.md` — full migration plan with drift analysis
-- `AWS-COST-ANALYSIS.md` — cost breakdown per phase ($0.00 delta total)
+- `AWS-COST-ANALYSIS.md` — cost breakdown per phase
 
 ## Decisions Locked In
 
 - No NAT Gateway (public subnets only)
 - No ALB (keep EIP + Certbot)
-- CI/CD will run `terraform fmt -check`, `terraform validate`, `terraform plan` on all PRs
+- CI/CD runs `terraform fmt -check`, `terraform validate`, `terraform plan` on all PRs
 - No hardcoded secrets — OIDC auth for GitHub Actions
 - Bootstrap module uses local state (intentional — it manages the S3 backend itself). Apply bootstrap changes manually before CI can use them
 - CI uses Node 25 to match local dev environment (npm 11)
@@ -74,47 +92,8 @@ Server hardening — unattended-upgrades (security-only, auto-reboot at 08:00 UT
 
 ---
 
-## Phase 8 Complete ✓
+## Future Enhancements
 
-Server hardening — unattended-upgrades (security-only, auto-reboot at 08:00 UTC / 2am Central), SSH hardening via sshd drop-in config (no root login, no password auth, MaxAuthTries 3), Certbot timer enabled, log rotation for CloudWatch agent and app logs. All changes in user data template; requires instance replacement to take effect.
-
-## Phase 9 — Testing & Security Scanning
-
-- [ ] Unit tests: Jest + React Testing Library for React components
-- [ ] E2E tests: Playwright or Cypress for smoke tests
-- [ ] IaC security scanning: tfsec or checkov in CI pipeline
-- [ ] `npm audit` in CI workflow
-- [ ] Terraform native tests (`terraform test`) for module validation
-
-## Phase 10 Complete ✓
-
-- [x] Change the page title and favicon
-- [x] Add Google Analytics (GA4) and Ahrefs analytics
-- [x] Update portfolio project description to reflect all infrastructure work (Phases 1–8)
-- [x] Update README with architecture summary
-
----
-
-## LinkedIn Promotion
-
-- [ ] Add portfolio as a **Featured** item on LinkedIn (link to [justinmemphis.com](https://justinmemphis.com))
-- [ ] Add as a **Project** on LinkedIn — title, description highlighting Terraform/AWS/CI/CD work, link to live site and GitHub repo
-
-Profile: [linkedin.com/in/justin-carter-memphis](https://www.linkedin.com/in/justin-carter-memphis/)
-
----
-
-## Content & UX Tasks
-
-- [ ] **Review contact/email form** — evaluate whether the email submission form is working well enough to keep; improve it or remove it
-- [ ] **Add resume to webpage** — link or embed a downloadable resume file
-- [ ] **Update project description** — review the portfolio project card to reflect recent changes (SSM deploy, S3 artifacts bucket, Twitter removal, CI/CD auto-deploy)
-
----
-
-## Suggested Future Enhancements
-
-- ~~**CD pipeline**: Extend GitHub Actions to auto-deploy build artifacts to EC2 on merge to main (SCP or SSM Run Command)~~ **Done** — S3 + SSM deploy implemented
 - **Backup strategy**: EBS snapshots on a schedule via AWS Backup or lifecycle policy
 - **Cost monitoring**: AWS Budgets alarm for monthly spend threshold
 - **WAF / rate limiting**: Nginx rate limiting or AWS WAF if traffic grows

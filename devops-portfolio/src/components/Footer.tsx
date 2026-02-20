@@ -19,7 +19,7 @@ const Footer: React.FC = () => {
             <a href="#projects">Projects</a>
             <a href="#skills">Skills</a>
             <a href="#contact">Contact</a>
-            <a href="/justin-carter-resume.pdf" target="_blank" rel="noopener noreferrer">Resume</a>
+            <a href="/resume.pdf" download>Resume</a>
           </div>
         </div>
 
