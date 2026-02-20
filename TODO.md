@@ -14,7 +14,7 @@
 | 8 | Server Hardening (unattended-upgrades, SSH, Certbot, log rotation) | **Complete** |
 | 9 | Testing & Security Scanning | **Pending** |
 | 10 | Polish & Content | **Complete** |
-| 11 | Content & UX | **In Progress** |
+| 11 | Content & UX | **Complete** |
 
 ---
 
