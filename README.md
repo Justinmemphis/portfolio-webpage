@@ -138,18 +138,6 @@ Manual console configuration is treated as technical debt.
 
 ---
 
-## Future Enhancements
-
-Planned improvements include:
-
-- AWS WAF integration
-- Multi-environment support (dev / staging / prod)
-- Infrastructure security scanning (tfsec / Checkov)
-- Centralized logging
-- Cost visibility and optimization tracking
-
----
-
 ## Why This Project
 
 This repository demonstrates how modern AWS infrastructure should be built:
