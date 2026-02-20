@@ -20,14 +20,14 @@ const Projects: React.FC = () => {
     {
       title: 'AWS Infrastructure Portfolio — Terraform IaC',
       description: 'Production-grade AWS infrastructure built entirely with Terraform across 8 phases: VPC networking, auto-scaling compute, modular DNS, CI/CD with OIDC auth, CloudWatch observability, and server hardening — all managed as code.',
-      tags: ['Terraform', 'AWS', 'VPC', 'Auto Scaling', 'GitHub Actions', 'OIDC', 'CloudWatch', 'Route 53', 'Nginx', 'SSL/TLS'],
+      tags: ['Terraform', 'AWS', 'VPC', 'Auto Scaling', 'GitHub Actions', 'OIDC', 'SSM', 'CloudWatch', 'Route 53', 'Nginx', 'SSL/TLS'],
       icon: <SiTerraform />,
       status: 'live',
       github: 'https://github.com/Justinmemphis/claude-portfolio-webpage',
       demo: 'https://justinmemphis.com',
       highlights: [
         'Modular Terraform: VPC, compute, DNS, monitoring — each a reusable module',
-        'CI/CD via GitHub Actions with OIDC auth (zero hardcoded secrets)',
+        'CI/CD: GitHub Actions with OIDC auth; auto-deploys on merge via S3 artifacts + SSM Run Command (no SSH)',
         'CloudWatch alarms + SNS alerting (CPU, disk, status checks, ASG health)',
         'Server hardening: unattended-upgrades, SSH lockdown, fail2ban, UFW',
         'Remote state with S3 backend + DynamoDB locking'
