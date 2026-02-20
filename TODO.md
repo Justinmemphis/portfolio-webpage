@@ -62,7 +62,7 @@ Unattended-upgrades (security-only, auto-reboot 08:00 UTC / 2am Central), SSH ha
 - [x] Add portfolio as Featured item and Project on LinkedIn
 - [x] Remove contact form (replaced with social links only)
 - [x] Add resume to `public/` and wire up download links (nav, footer, hero)
-- [ ] Update portfolio project card to reflect SSM deploy, S3 artifacts bucket, and CI/CD auto-deploy
+- [x] Update portfolio project card to reflect SSM deploy, S3 artifacts bucket, and CI/CD auto-deploy
 
 ---
 
