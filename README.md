@@ -1,14 +1,31 @@
-# DevOps Portfolio — Justin Carter
+# AWS Infrastructure Portfolio — Terraform IaC
 
-Production-grade AWS infrastructure and React portfolio site, built entirely with Terraform across 8 iterative phases. Designed to demonstrate real-world cloud engineering, infrastructure-as-code, and DevSecOps practices.
+Production-style AWS infrastructure built entirely with Terraform and deployed via GitHub Actions using OpenID Connect (OIDC) federation.
 
-**Live site:** [justinmemphis.com](https://justinmemphis.com)
+This repository demonstrates secure cloud architecture, Infrastructure as Code best practices, and identity-based CI/CD automation. No manual AWS console configuration is required — the environment is fully reproducible from code.
+
+Live Site: https://justinmemphis.com
 
 ---
 
-## Architecture Overview
+## Project Overview
 
-A single EC2 instance behind an Auto Scaling Group serves the React frontend via Nginx with TLS. All infrastructure is defined in modular Terraform and deployed through a CI/CD pipeline with no hardcoded secrets.
+This project provisions and manages a complete AWS environment including:
+
+- Custom VPC with public and private subnets
+- Internet Gateway and route tables
+- EC2 Auto Scaling Group
+- Application Load Balancer
+- Route 53 DNS
+- IAM roles and policies (least privilege)
+- CloudWatch monitoring and alarms
+- Remote Terraform state (S3 + DynamoDB locking)
+
+All infrastructure is version-controlled and deployed through CI/CD.
+
+---
+
+## Architecture Diagram
 
 ```
 Internet
@@ -30,98 +47,117 @@ State:      S3 + DynamoDB Locking
 CI/CD:      GitHub Actions ──► OIDC ──► AWS
 ```
 
-## Infrastructure Highlights
+---
 
-| Phase | What Was Built |
-|-------|---------------|
-| 1. Remote State | S3 backend with DynamoDB locking — no local state files |
-| 2. Networking | VPC with 2 public subnets, Internet Gateway, route tables |
-| 3. Compute | Launch template, Auto Scaling Group, security groups, IAM instance profile |
-| 4. DNS | Route 53 module — hosted zone lookup, A record, www CNAME |
-| 5. Security Hardening | Discrete security group rules, least-privilege IAM policies |
-| 6. CI/CD | GitHub Actions: lint, validate, plan on every PR. OIDC auth (zero secrets) |
-| 7. Monitoring | CloudWatch alarms (CPU, disk, status checks, ASG health) with SNS alerts |
-| 8. Server Hardening | Unattended security upgrades, SSH lockdown, fail2ban, UFW, Certbot auto-renewal |
+## Deployment Flow
 
-## Tech Stack
+1. Code is pushed to GitHub.
+2. GitHub Actions workflow is triggered.
+3. GitHub authenticates to AWS using OIDC federation.
+4. AWS STS validates the identity token and allows role assumption.
+5. Temporary AWS credentials are issued.
+6. Terraform executes plan/apply.
+7. Infrastructure updates are applied automatically.
+8. Temporary credentials expire.
 
-| Layer | Technology |
-|-------|-----------|
-| Frontend | React 19, TypeScript, Framer Motion |
-| Styling | Custom CSS with CSS variables (dark/cyberpunk theme) |
-| Infrastructure | Terraform (AWS provider ~> 5.0), modular design |
-| Compute | EC2 (Ubuntu 22.04), Nginx, Let's Encrypt TLS |
-| Networking | VPC, public subnets, Internet Gateway, Elastic IP |
-| DNS | Route 53 |
-| Monitoring | CloudWatch alarms, CloudWatch agent, SNS |
-| CI/CD | GitHub Actions, OIDC federation (no hardcoded credentials) |
-| State Management | S3 + DynamoDB |
+No AWS access keys are stored in GitHub.
 
-## Project Structure
+---
+
+## CI/CD & Identity Federation (OIDC)
+
+This repository uses GitHub Actions with OpenID Connect (OIDC) to securely authenticate to AWS.
+
+Instead of storing long-lived AWS credentials:
+
+- GitHub requests a signed identity token at runtime.
+- AWS verifies the token against a scoped IAM trust policy.
+- AWS issues short-lived credentials via STS.
+- Credentials automatically expire after the workflow completes.
+
+Security benefits:
+
+- No static AWS access keys
+- Short-lived session credentials
+- Repository and branch-scoped trust policy
+- Principle of least privilege
+- Infrastructure changes gated via pull requests
+
+---
+
+## Terraform Structure
 
 ```
-.
-├── .github/workflows/
-│   └── pr-checks.yml              # CI pipeline (React build + Terraform plan)
-├── devops-portfolio/
-│   ├── src/
-│   │   ├── components/            # React components (Hero, Projects, Skills, etc.)
-│   │   ├── App.tsx                # Root component
-│   │   └── index.tsx              # Entry point
-│   ├── public/                    # Static assets, favicon, index.html
-│   ├── terraform/
-│   │   ├── modules/
-│   │   │   ├── networking/        # VPC, subnets, IGW, route tables
-│   │   │   ├── compute/           # Launch template, ASG, SG, IAM, user data
-│   │   │   ├── dns/               # Route 53 records
-│   │   │   └── monitoring/        # CloudWatch alarms, SNS topic
-│   │   ├── bootstrap/             # S3 backend + OIDC provider (local state)
-│   │   ├── main.tf                # Root module composition
-│   │   ├── backend.tf             # S3 state backend config
-│   │   └── variables.tf           # Input variables
-│   └── package.json
-├── TODO.md                        # Phase tracker
-└── README.md
+terraform/
+├── backend/       # Remote state configuration (S3 + DynamoDB locking)
+├── networking/    # VPC, subnets, route tables, Internet Gateway
+├── compute/       # EC2, Launch Template, Auto Scaling Group, ALB
+├── iam/           # IAM roles, policies, OIDC trust relationships
+├── monitoring/    # CloudWatch alarms and metrics
+├── variables.tf
+├── outputs.tf
+├── providers.tf
+└── main.tf
 ```
 
-## Getting Started
+Features:
 
-### Prerequisites
+- Modular Terraform design
+- Remote state stored in S3
+- DynamoDB state locking
+- Environment reproducibility
+- Idempotent infrastructure provisioning
 
-- Node.js 25+ and npm 11+
-- Terraform 1.x
-- AWS CLI configured with appropriate credentials
+---
 
-### Local Development
+## Security Design Principles
 
-```bash
-cd devops-portfolio
-npm install
-npm start            # Dev server on localhost:3000
-npm run build        # Production build
-npm test             # Jest + React Testing Library
-```
+This project follows modern cloud security practices:
 
-### Infrastructure
+- Infrastructure as Code only
+- Identity-based authentication (OIDC)
+- Least-privilege IAM policies
+- No manual configuration drift
+- Short-lived credentials
+- Pull request review before infrastructure changes
 
-```bash
-cd devops-portfolio/terraform
-terraform init
-terraform plan -var-file="terraform.tfvars"
-terraform apply -var-file="terraform.tfvars"
-```
+Manual console configuration is treated as technical debt.
 
-The bootstrap module (`terraform/bootstrap/`) manages the S3 backend and OIDC provider using local state. Apply it manually before running the main configuration.
+---
 
-## CI/CD Pipeline
+## Key Engineering Patterns Demonstrated
 
-Every push to `main` and every pull request triggers:
+- AWS networking architecture (VPC, subnets, routing)
+- Auto Scaling compute design
+- Load-balanced application hosting
+- DNS integration with Route 53
+- CI/CD-driven infrastructure lifecycle
+- Identity federation with OIDC
+- Remote Terraform state with locking
+- Secure IAM trust relationships
 
-1. **React** — install dependencies, lint, test, production build
-2. **Terraform** — `fmt -check`, `validate`, `plan` (authenticated via OIDC, no secrets stored in GitHub)
+---
 
-## Contact
+## Future Enhancements
 
-- **LinkedIn:** [justin-carter-memphis](https://www.linkedin.com/in/justin-carter-memphis/)
-- **GitHub:** [Justinmemphis](https://github.com/Justinmemphis)
-- **Email:** jcarter82@gmail.com
+Planned improvements include:
+
+- AWS WAF integration
+- Multi-environment support (dev / staging / prod)
+- Infrastructure security scanning (tfsec / Checkov)
+- Centralized logging
+- Cost visibility and optimization tracking
+
+---
+
+## Why This Project
+
+This repository demonstrates how modern AWS infrastructure should be built:
+
+- Secure by default
+- Fully automated
+- Version controlled
+- Identity-aware
+- Reproducible
+
+It reflects production-oriented cloud engineering practices rather than console-driven experimentation.
