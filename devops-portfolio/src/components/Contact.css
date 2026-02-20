@@ -9,6 +9,13 @@
   margin-top: 3rem;
 }
 
+.contact-content--centered {
+  grid-template-columns: 1fr;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 .contact-info {
   display: flex;
   flex-direction: column;
