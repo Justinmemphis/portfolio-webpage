@@ -7,7 +7,7 @@
   --accent-warning: #ffb800;
   --text-primary: #e8f4f8;
   --text-secondary: #8b9eb5;
-  --text-muted: #4a5568;
+  --text-muted: #6b7a99;
   --border-color: #2d3748;
   --shadow-glow: rgba(0, 255, 136, 0.3);
   --shadow-glow-blue: rgba(0, 217, 255, 0.3);
@@ -34,11 +34,12 @@ body {
   width: 100%;
   height: 100%;
   z-index: -1;
-  background: 
+  background:
     linear-gradient(90deg, var(--bg-secondary) 1px, transparent 1px),
     linear-gradient(180deg, var(--bg-secondary) 1px, transparent 1px);
   background-size: 50px 50px;
   animation: gridMove 20s linear infinite;
+  will-change: transform;
 }
 
 .animated-bg::before {
@@ -248,6 +249,27 @@ section {
   margin-left: 4px;
   animation: blink 1s step-end infinite;
   vertical-align: text-bottom;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animated-bg,
+  .animated-bg::before {
+    animation: none;
+  }
+
+  .cursor {
+    animation: none;
+    opacity: 1;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 @media (max-width: 768px) {
