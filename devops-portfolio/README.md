@@ -41,125 +41,23 @@ npm run build
 
 The development server runs on `http://localhost:3000`
 
-## 🌐 Deployment to AWS EC2
+## Deployment
 
-### Prerequisites
+Deployment is fully automated via GitHub Actions. Push to `main` and the pipeline handles everything.
 
-- AWS Account
-- EC2 instance (Ubuntu 20.04 or later)
-- Domain name (optional but recommended)
+### What happens on push to `main`
 
-### Step 1: Build the Application
+1. React app is built (`npm run build`)
+2. Build output is synced to S3
+3. AWS Systems Manager (SSM) Run Command pulls the new build from S3 to `/var/www/portfolio/` on the EC2 instance
 
-```bash
-npm run build
-```
+No SSH key required. No port 22 open. Authentication uses OIDC federation — GitHub requests a short-lived AWS token at runtime; no credentials are stored in the repo.
 
-This creates an optimized production build in the `build/` directory.
+The workflow is at `.github/workflows/pr-checks.yml` in the repository root.
 
-### Step 2: Prepare EC2 Instance
+### Infrastructure
 
-SSH into your EC2 instance:
-
-```bash
-ssh -i your-key.pem ubuntu@your-ec2-ip
-```
-
-Install Nginx:
-
-```bash
-sudo apt update
-sudo apt install nginx -y
-```
-
-### Step 3: Upload Build Files
-
-From your local machine, copy the build folder to EC2:
-
-```bash
-scp -i your-key.pem -r build/* ubuntu@your-ec2-ip:/tmp/portfolio-build/
-```
-
-On EC2, move files to Nginx directory:
-
-```bash
-sudo mkdir -p /var/www/portfolio
-sudo mv /tmp/portfolio-build/* /var/www/portfolio/
-sudo chown -R www-data:www-data /var/www/portfolio
-```
-
-### Step 4: Configure Nginx
-
-Create Nginx configuration:
-
-```bash
-sudo nano /etc/nginx/sites-available/portfolio
-```
-
-Add this configuration:
-
-```nginx
-server {
-    listen 80;
-    server_name justinmemphis.com www.justinmemphis.com;
-
-    root /var/www/portfolio;
-    index index.html;
-
-    location / {
-        try_files $uri $uri/ /index.html;
-    }
-
-    # Gzip compression
-    gzip on;
-    gzip_vary on;
-    gzip_min_length 1024;
-    gzip_types text/plain text/css text/xml text/javascript application/x-javascript application/xml+rss application/javascript application/json;
-
-    # Cache static assets
-    location ~* \.(jpg|jpeg|png|gif|ico|css|js|svg|woff|woff2)$ {
-        expires 1y;
-        add_header Cache-Control "public, immutable";
-    }
-}
-```
-
-Enable the site:
-
-```bash
-sudo ln -s /etc/nginx/sites-available/portfolio /etc/nginx/sites-enabled/
-sudo nginx -t
-sudo systemctl restart nginx
-```
-
-### Step 5: SSL/TLS with Let's Encrypt (Recommended)
-
-```bash
-sudo apt install certbot python3-certbot-nginx -y
-sudo certbot --nginx -d justinmemphis.com -d www.justinmemphis.com
-```
-
-### Step 6: Security Hardening
-
-Configure UFW firewall:
-
-```bash
-sudo ufw allow 'Nginx Full'
-sudo ufw allow OpenSSH
-sudo ufw enable
-```
-
-Install fail2ban:
-
-```bash
-sudo apt install fail2ban -y
-sudo systemctl enable fail2ban
-sudo systemctl start fail2ban
-```
-
-## 🔄 CI/CD with GitHub Actions (Coming Soon)
-
-Create `.github/workflows/deploy.yml` for automated deployments.
+Infrastructure is managed with Terraform in `terraform/`. The EC2 instance user data bootstraps Nginx, Certbot (TLS), fail2ban, and UFW automatically on first launch — no manual server configuration needed.
 
 ## 📁 Project Structure
 

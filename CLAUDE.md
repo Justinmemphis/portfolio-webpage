@@ -8,7 +8,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-DevOps portfolio website for Justin Carter. React/TypeScript frontend with Terraform-managed AWS infrastructure. The two are independently managed — Terraform provisions the EC2 instance and networking, while the React build output is deployed separately via SCP.
+DevOps portfolio website for Justin Carter. React/TypeScript frontend with Terraform-managed AWS infrastructure. Terraform provisions the EC2 instance and networking; the React build is deployed automatically via GitHub Actions (S3 sync + SSM Run Command) on every push to `main`.
 
 ## Repository Layout
 
@@ -38,20 +38,23 @@ terraform apply
 
 ### Deploy build to EC2
 
-```bash
-cd devops-portfolio && npm run build
-scp -i ~/.ssh/<KEY>.pem -r build/* ubuntu@<ELASTIC_IP>:/var/www/portfolio/
-```
+Deployment is fully automated via GitHub Actions. On every push to `main`:
 
-The EC2 user data script configures Nginx automatically. GitHub Actions CI/CD is planned to replace the manual SCP step.
+1. React app is built (`npm run build`)
+2. Build output is synced to S3 (`aws s3 sync devops-portfolio/build/ s3://<DEPLOY_BUCKET>/`)
+3. SSM Run Command pulls from S3 to `/var/www/portfolio/` on the EC2 instance
+
+No SSH key or open port 22 required. Authentication uses OIDC federation (no stored AWS credentials).
+
+To trigger a deploy, just push to `main`. The workflow is at `.github/workflows/pr-checks.yml`.
 
 ## Architecture
 
 - **React 19 + TypeScript** with strict mode. CRA-based (react-scripts).
 - **Framer Motion** for animations. **React Icons** for iconography.
 - **Styling**: Custom CSS with CSS variables defining a dark/cyberpunk theme (no CSS framework). Component-scoped CSS files.
-- **Terraform**: AWS provider ~> 5.0. Resources: EC2 (Ubuntu 22.04), security group, Elastic IP, Route 53 A/CNAME records. User data script bootstraps Nginx, Node.js 20.x, Certbot, fail2ban, and UFW.
-- **CI/CD**: GitHub Actions runs React tests/build and Terraform fmt/validate/plan on pushes to `main` and PRs. OIDC auth (no hardcoded secrets).
+- **Terraform**: AWS provider ~> 5.0. Modular layout (`modules/networking`, `modules/compute`, `modules/dns`, `modules/monitoring`) with a `bootstrap/` root for OIDC and S3/DynamoDB state. EC2 (Ubuntu 22.04) in an ASG, Elastic IP, Route 53 A/CNAME. User data bootstraps Nginx, Node.js 20.x, Certbot, fail2ban, and UFW.
+- **CI/CD**: GitHub Actions (`pr-checks.yml`) runs React tests/build and Terraform fmt/validate/plan on every push and PR. On merge to `main`, the deploy job syncs the build to S3 and runs SSM to update the EC2 instance. OIDC auth — no hardcoded secrets.
 
 ## Terraform Variables
 
@@ -61,6 +64,6 @@ Defined in `variables.tf`, values in `terraform.tfvars` (gitignored). Key requir
 
 Configured in `package.json` extending `react-app` and `react-app/jest`.
 
-## TODO
+## Roadmap
 
-See [TODO.md](TODO.md) for the full task list.
+See [ROADMAP.md](ROADMAP.md) for current goals and priorities. Archived docs (migration plan, deployment guide, infrastructure phase log): `docs/archive/`.
