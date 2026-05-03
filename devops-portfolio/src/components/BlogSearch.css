@@ -12,10 +12,10 @@
 .search-input {
   width: 100%;
   padding: 0.65rem 1rem;
-  background: var(--bg-secondary, #0f172a);
-  border: 1px solid var(--border-color, #1e293b);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
   border-radius: 6px;
-  color: var(--text-primary, #e2e8f0);
+  color: var(--text-primary);
   font-family: inherit;
   font-size: 0.95rem;
   outline: none;
@@ -23,7 +23,7 @@
 }
 
 .search-input:focus {
-  border-color: var(--accent-cyan, #00d4ff);
+  border-color: var(--accent-secondary);
 }
 
 .filter-row {
@@ -35,9 +35,9 @@
 .filter-chip {
   padding: 0.2rem 0.7rem;
   background: transparent;
-  border: 1px solid var(--border-color, #1e293b);
+  border: 1px solid var(--border-color);
   border-radius: 4px;
-  color: var(--text-secondary, #94a3b8);
+  color: var(--text-secondary);
   font-family: inherit;
   font-size: 0.8rem;
   cursor: pointer;
@@ -46,8 +46,8 @@
 
 .filter-chip:hover,
 .filter-chip.active {
-  border-color: var(--accent-cyan, #00d4ff);
-  color: var(--accent-cyan, #00d4ff);
+  border-color: var(--accent-secondary);
+  color: var(--accent-secondary);
 }
 
 .post-list {
@@ -60,13 +60,13 @@
 }
 
 .post-card {
-  border: 1px solid var(--border-color, #1e293b);
+  border: 1px solid var(--border-color);
   border-radius: 8px;
   transition: border-color 0.2s;
 }
 
 .post-card:hover {
-  border-color: var(--accent-cyan, #00d4ff);
+  border-color: var(--accent-secondary);
 }
 
 .post-link {
@@ -79,19 +79,19 @@
   display: block;
   font-size: 1.15rem;
   font-weight: 600;
-  color: var(--text-primary, #e2e8f0);
+  color: var(--text-primary);
   margin-bottom: 0.3rem;
 }
 
 .post-date {
   display: block;
   font-size: 0.8rem;
-  color: var(--text-secondary, #94a3b8);
+  color: var(--text-secondary);
   margin-bottom: 0.6rem;
 }
 
 .post-excerpt {
-  color: var(--text-secondary, #94a3b8);
+  color: var(--text-secondary);
   font-size: 0.9rem;
   margin: 0 0 0.75rem;
   line-height: 1.6;
@@ -108,15 +108,15 @@
 
 .tag {
   background: transparent;
-  color: var(--accent-cyan, #00d4ff);
-  border: 1px solid var(--accent-cyan, #00d4ff);
+  color: var(--accent-secondary);
+  border: 1px solid var(--accent-secondary);
   padding: 0.1rem 0.5rem;
   border-radius: 4px;
   font-size: 0.75rem;
 }
 
 .no-results {
-  color: var(--text-secondary, #94a3b8);
+  color: var(--text-secondary);
   text-align: center;
   padding: 2rem 0;
 }

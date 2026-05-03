@@ -19,13 +19,20 @@ const Navigation: React.FC = () => {
     { label: 'Home', href: '#home' },
     { label: 'Projects', href: '#projects' },
     { label: 'Skills', href: '#skills' },
-    { label: 'Contact', href: '#contact' }
+    { label: 'Contact', href: '#contact' },
+    { label: 'Blog', href: '/blog' },
   ];
 
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    if (!href.startsWith('#')) return;
     e.preventDefault();
     setIsMobileMenuOpen(false);
-    
+
+    if (window.location.pathname !== '/') {
+      window.location.href = '/' + href;
+      return;
+    }
+
     if (href === '#home') {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } else {
