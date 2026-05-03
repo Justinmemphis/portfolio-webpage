@@ -4,9 +4,29 @@ import Hero from '../components/Hero';
 import Projects from '../components/Projects';
 import Skills from '../components/Skills';
 import Contact from '../components/Contact';
+
+const personSchema = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Justin Carter",
+  "jobTitle": "DevOps Engineer",
+  "url": "https://justinmemphis.com",
+  "description": "DevOps Engineer based in Memphis, TN specializing in AWS infrastructure, Terraform, and CI/CD automation.",
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Memphis",
+    "addressRegion": "TN",
+    "addressCountry": "US"
+  },
+  "sameAs": [
+    "https://www.linkedin.com/in/justin-carter-memphis/",
+    "https://github.com/Justinmemphis"
+  ]
+};
 ---
 
 <BaseLayout>
+  <script type="application/ld+json" set:html={JSON.stringify(personSchema)} />
   <section id="home">
     <Hero client:load />
     <Projects client:visible />
