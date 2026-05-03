@@ -1,0 +1,63 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import BlogSearch from '../../components/BlogSearch';
+
+const posts = (await getCollection('blog')).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
+);
+---
+
+<BaseLayout title="Blog | Justin Carter" description="DevOps notes, infrastructure write-ups, and technical progress from Justin Carter.">
+  <div class="blog-page">
+    <header class="blog-header">
+      <a href="/" class="back-link">← Back to Portfolio</a>
+      <h1>Blog</h1>
+      <p class="blog-subtitle">DevOps notes, infrastructure write-ups, and technical progress.</p>
+    </header>
+
+    <BlogSearch posts={posts.map(p => ({
+      slug: p.id,
+      title: p.data.title,
+      date: p.data.date.toISOString(),
+      excerpt: p.data.excerpt,
+      tags: p.data.tags,
+    }))} client:load />
+  </div>
+</BaseLayout>
+
+<style>
+  .blog-page {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 4rem;
+    font-family: var(--font-mono, monospace);
+  }
+
+  .blog-header {
+    margin-bottom: 2.5rem;
+  }
+
+  .back-link {
+    display: inline-block;
+    margin-bottom: 1.5rem;
+    color: var(--accent-cyan, #00d4ff);
+    text-decoration: none;
+    font-size: 0.9rem;
+  }
+
+  .back-link:hover {
+    text-decoration: underline;
+  }
+
+  h1 {
+    font-size: 2.5rem;
+    color: var(--text-primary, #e2e8f0);
+    margin: 0 0 0.5rem;
+  }
+
+  .blog-subtitle {
+    color: var(--text-secondary, #94a3b8);
+    margin: 0;
+  }
+</style>

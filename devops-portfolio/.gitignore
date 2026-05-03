@@ -11,6 +11,9 @@
 # production
 /build
 
+# Astro
+.astro/
+
 # misc
 .DS_Store
 .env.local
