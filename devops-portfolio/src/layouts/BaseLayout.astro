@@ -1,6 +1,8 @@
 ---
 import '../index.css';
 import '../App.css';
+import Navigation from '../components/Navigation';
+import Footer from '../components/Footer';
 
 export interface Props {
   title?: string;
@@ -43,6 +45,12 @@ const {
   </head>
   <body>
     <div class="animated-bg"></div>
-    <slot />
+    <div class="app-container">
+      <Navigation client:load />
+      <main>
+        <slot />
+      </main>
+      <Footer client:visible />
+    </div>
   </body>
 </html>
