@@ -18,6 +18,27 @@ const formattedDate = post.data.date.toLocaleDateString('en-US', {
   month: 'long',
   day: 'numeric',
 });
+
+const blogPostingSchema = {
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": post.data.title,
+  "description": post.data.excerpt,
+  "datePublished": post.data.date.toISOString(),
+  "url": `https://justinmemphis.com/blog/${post.id}`,
+  "author": {
+    "@type": "Person",
+    "name": "Justin Carter",
+    "url": "https://justinmemphis.com"
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "Justin Carter",
+    "url": "https://justinmemphis.com"
+  },
+  ...(post.data.coverImage ? { "image": post.data.coverImage } : {}),
+  ...(post.data.tags.length > 0 ? { "keywords": post.data.tags.join(", ") } : {})
+};
 ---
 
 <BaseLayout
@@ -25,6 +46,7 @@ const formattedDate = post.data.date.toLocaleDateString('en-US', {
   description={post.data.excerpt}
   ogImage={post.data.coverImage}
 >
+  <script type="application/ld+json" set:html={JSON.stringify(blogPostingSchema)} />
   <article class="post">
     <header class="post-header">
       <h1>{post.data.title}</h1>
