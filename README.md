@@ -12,12 +12,11 @@ Live Site: https://justinmemphis.com
 
 This project provisions and manages a complete AWS environment including:
 
-- Custom VPC with public and private subnets
+- Custom VPC with public subnets across two AZs
 - Internet Gateway and route tables
-- EC2 Auto Scaling Group
-- Application Load Balancer
-- Route 53 DNS
-- IAM roles and policies (least privilege)
+- EC2 Auto Scaling Group (min/max 1) behind an Elastic IP
+- Route 53 DNS (A + CNAME records)
+- IAM roles and policies (least privilege, OIDC-based)
 - CloudWatch monitoring and alarms
 - Remote Terraform state (S3 + DynamoDB locking)
 
@@ -32,19 +31,16 @@ Internet
   │
   ├── Route 53 (A + CNAME) ──► Elastic IP
   │                                │
-  │                          ┌─────┴─────┐
-  │                          │  EC2 (ASG) │
-  │                          │  Nginx     │
-  │                          │  Certbot   │
-  │                          └─────┬─────┘
-  │                                │
   └── VPC 10.0.0.0/16             │
       ├── Public Subnet (us-east-1a)
+      │       └── EC2 (ASG, t3.micro)
+      │               Nginx + Certbot
       └── Public Subnet (us-east-1b)
 
+Deploy:     GitHub Actions ──► S3 ──► SSM Run Command ──► EC2
 Monitoring: CloudWatch Alarms ──► SNS Email
 State:      S3 + DynamoDB Locking
-CI/CD:      GitHub Actions ──► OIDC ──► AWS
+Auth:       GitHub Actions ──► OIDC ──► AWS STS (no stored keys)
 ```
 
 ---
@@ -89,15 +85,18 @@ Security benefits:
 
 ```
 terraform/
-├── backend/       # Remote state configuration (S3 + DynamoDB locking)
-├── networking/    # VPC, subnets, route tables, Internet Gateway
-├── compute/       # EC2, Launch Template, Auto Scaling Group, ALB
-├── iam/           # IAM roles, policies, OIDC trust relationships
-├── monitoring/    # CloudWatch alarms and metrics
-├── variables.tf
+├── bootstrap/           # One-time setup: S3/DynamoDB state backend, GitHub OIDC provider
+├── modules/
+│   ├── compute/         # Launch template, ASG, IAM instance profile
+│   ├── dns/             # Route 53 A + CNAME records
+│   ├── monitoring/      # CloudWatch alarms, SNS
+│   └── networking/      # VPC, public subnets, IGW, route tables
+├── backend.tf
+├── main.tf
 ├── outputs.tf
-├── providers.tf
-└── main.tf
+├── provider.tf
+├── variables.tf
+└── terraform.tfvars.example
 ```
 
 Features:
