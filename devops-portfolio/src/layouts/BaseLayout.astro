@@ -1,4 +1,7 @@
 ---
+import '../index.css';
+import '../App.css';
+
 export interface Props {
   title?: string;
   description?: string;
@@ -39,6 +42,7 @@ const {
     </script>
   </head>
   <body>
+    <div class="animated-bg"></div>
     <slot />
   </body>
 </html>

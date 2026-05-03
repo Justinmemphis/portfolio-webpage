@@ -25,10 +25,10 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4.2.2
 
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v4.4.0
         with:
           node-version: 25
           cache: npm
@@ -36,11 +36,6 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
-
-      - name: Run tests
-        run: npx react-scripts test --passWithNoTests
-        env:
-          CI: true
 
       - name: Build production bundle
         run: npm run build
@@ -54,10 +49,10 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4.2.2
 
       - name: Set up Terraform
-        uses: hashicorp/setup-terraform@v3
+        uses: hashicorp/setup-terraform@v3.1.2
 
       - name: Terraform Format Check
         run: terraform fmt -check -recursive
@@ -69,7 +64,7 @@ jobs:
         run: terraform validate
 
       - name: Configure AWS Credentials (OIDC)
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v4.1.0
         with:
           role-to-assume: arn:aws:iam::010955985414:role/devops-portfolio-github-actions-ci
           aws-region: ${{ env.AWS_REGION }}
@@ -88,10 +83,10 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4.2.2
 
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v4.4.0
         with:
           node-version: 25
           cache: npm
@@ -109,11 +104,11 @@ jobs:
         run: |
           echo "=== devops-portfolio/build/ ==="
           ls -la devops-portfolio/build/
-          echo "=== devops-portfolio/build/static/js/ ==="
-          ls -la devops-portfolio/build/static/js/ 2>/dev/null || echo "static/js/ not found"
+          echo "=== devops-portfolio/build/_astro/ ==="
+          ls -la devops-portfolio/build/_astro/ 2>/dev/null || echo "_astro/ not found"
 
       - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v4.1.0
         with:
           role-to-assume: arn:aws:iam::010955985414:role/devops-portfolio-github-actions-ci
           aws-region: ${{ env.AWS_REGION }}
