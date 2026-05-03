@@ -1,0 +1,24 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Navigation from '../components/Navigation';
+import Hero from '../components/Hero';
+import Projects from '../components/Projects';
+import Skills from '../components/Skills';
+import Contact from '../components/Contact';
+import Footer from '../components/Footer';
+import '../App.css';
+---
+
+<BaseLayout>
+  <div class="app-container">
+    <div class="animated-bg"></div>
+    <Navigation client:load />
+    <main id="home">
+      <Hero client:load />
+      <Projects client:visible />
+      <Skills client:visible />
+      <Contact client:visible />
+    </main>
+    <Footer client:visible />
+  </div>
+</BaseLayout>

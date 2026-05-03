@@ -60,6 +60,35 @@ Run Lighthouse SEO audit and record current score before starting.
 
 ---
 
+## 3a. CRA → Astro Migration (in progress)
+
+Replacing CRA with Astro. Astro has first-class markdown/content support, built-in content collections, and can keep existing React components as interactive islands.
+
+### Phase 1 — Core setup
+- [x] Document migration steps
+- [ ] Install `astro`, `@astrojs/react`, remove `react-scripts`
+- [ ] Add `astro.config.mjs` (React integration, static output, `outDir: 'build'` to keep CI unchanged)
+- [ ] Update `tsconfig.json` to extend Astro's base config
+- [ ] Update `package.json` scripts: `start` → `astro dev`, `build` → `astro build`
+- [ ] Migrate `public/index.html` → `src/layouts/BaseLayout.astro` (head tags, analytics, meta)
+- [ ] Create `src/pages/index.astro` — homepage that mounts existing React components as islands (`client:load` / `client:visible`)
+- [ ] Delete CRA-only files: `src/react-app-env.d.ts`, `src/reportWebVitals.ts`, `src/setupTests.ts`
+- [ ] Verify dev server and production build work
+- [ ] Confirm CI passes (GitHub Actions `npm run build` is unchanged)
+
+### Phase 2 — Blog
+- [ ] Define content collection in `src/content/config.ts` — schema: `title`, `date`, `slug`, `tags`, `excerpt`, optional `coverImage`
+- [ ] Create `src/content/blog/` — drop `.md` files here to publish
+- [ ] `src/pages/blog/index.astro` — listing page, sorted by date desc, with tag filter + search bar (React island using Fuse.js)
+- [ ] `src/pages/blog/[slug].astro` — individual post page with `getStaticPaths`
+- [ ] `src/layouts/BlogLayout.astro` — post layout with title, date, tags, reading time
+- [ ] Images — `public/blog/` for post screenshots, referenced as `/blog/image.png` in markdown
+- [ ] Open Graph meta tags per post (`title`, `description`, `og:image`)
+- [ ] Add Blog link to Navigation component
+- [ ] Write first post to validate end-to-end
+
+---
+
 ## 4. CI Pipeline Improvements
 
 The Terraform infrastructure migration (Phases 1–8) is complete. Next priorities for the CI/CD setup:
