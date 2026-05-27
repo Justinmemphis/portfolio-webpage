@@ -5,6 +5,7 @@ interface PostSummary {
   slug: string;
   title: string;
   date: string;
+  formattedDate: string;
   excerpt: string;
   tags: string[];
 }
@@ -60,15 +61,6 @@ export default function BlogSearch({ posts }: Props) {
 
     return result;
   }, [posts, query, activeTag, activeMonth]);
-
-  function formatDate(iso: string) {
-    return new Date(iso).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      timeZone: 'UTC',
-    });
-  }
 
   function formatMonth(ym: string) {
     const [year, month] = ym.split('-');
@@ -138,7 +130,7 @@ export default function BlogSearch({ posts }: Props) {
             <li key={post.slug} className="post-card">
               <a href={`/blog/${post.slug}`} className="post-link">
                 <span className="post-title">{post.title}</span>
-                <time className="post-date">{formatDate(post.date)}</time>
+                <time className="post-date">{post.formattedDate}</time>
                 <p className="post-excerpt">{post.excerpt}</p>
                 {post.tags.length > 0 && (
                   <ul className="tag-list">
