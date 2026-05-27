@@ -1,101 +1,84 @@
 # DevOps Portfolio - Justin Carter
 
-A modern, cyberpunk-themed portfolio website built with React and TypeScript, showcasing DevOps expertise and cloud infrastructure skills.
+A cyberpunk-themed portfolio and blog built with Astro 5 and React, showcasing DevOps expertise and cloud infrastructure skills.
 
-## 🚀 Features
+Live site: https://justinmemphis.com
 
-- **Terminal-Animated Hero Section** - Eye-catching terminal simulation showing deployment status
-- **DevOps Project Showcase** - Highlighting infrastructure automation and cloud deployments
-- **Interactive Skills Matrix** - Visual representation of technical capabilities
-- **Certifications Timeline** - Displaying AWS, Security+, CCNA, and upcoming Terraform certification
-- **Responsive Design** - Optimized for all devices
-- **Modern Tech Stack** - React, TypeScript, Framer Motion animations
+## Tech Stack
 
-## 🛠️ Tech Stack
-
-- **Frontend**: React 18 with TypeScript
+- **Framework**: Astro 5 (static output, content collections for blog)
+- **Components**: React 19 + TypeScript, mounted as Astro islands
 - **Animations**: Framer Motion
 - **Icons**: React Icons
-- **Styling**: Custom CSS with CSS Variables
-- **Build Tool**: Create React App
+- **Fonts**: JetBrains Mono (self-hosted via @fontsource)
+- **Styling**: Custom CSS with CSS variables — dark/cyberpunk theme, no CSS framework
 
-## 📦 Installation & Development
+## Local Development
 
-### Prerequisites
-
-- Node.js (v14 or higher)
-- npm or yarn
-
-### Local Development
+Requires Node.js 25.
 
 ```bash
-# Install dependencies
 npm install
-
-# Start development server
-npm start
-
-# Build for production
-npm run build
+npm start       # dev server at http://localhost:4321
+npm run build   # production build to build/
 ```
 
-The development server runs on `http://localhost:3000`
+## Project Structure
+
+```
+src/
+├── components/          # React components (islands)
+│   ├── Navigation.tsx/css
+│   ├── Hero.tsx/css
+│   ├── Projects.tsx/css
+│   ├── Skills.tsx/css
+│   ├── Contact.tsx/css
+│   ├── Footer.tsx/css
+│   └── BlogSearch.tsx/css
+├── content/
+│   └── blog/            # Markdown blog posts
+├── layouts/
+│   └── BaseLayout.astro # Shared head, nav, footer, analytics
+├── pages/
+│   ├── index.astro      # Homepage
+│   └── blog/
+│       ├── index.astro  # Blog listing with search/filter
+│       └── [slug].astro # Individual post
+├── App.css              # Global CSS variables and theme
+└── index.css            # Base body styles
+```
+
+## Publishing a Blog Post
+
+Drop a `.md` file in `src/content/blog/` with this frontmatter:
+
+```markdown
+---
+title: "Your Post Title"
+date: 2026-05-03
+excerpt: "One sentence summary shown in the listing."
+tags: ["aws", "terraform"]
+coverImage: "/blog/your-image.png"  # optional
+---
+
+Post content here...
+```
+
+Push to `main` — the CI pipeline builds and deploys automatically.
 
 ## Deployment
 
-Deployment is fully automated via GitHub Actions. Push to `main` and the pipeline handles everything.
+Fully automated via GitHub Actions (`.github/workflows/pr-checks.yml`):
 
-### What happens on push to `main`
+1. Astro builds the site (`npm run build`)
+2. Build output syncs to S3
+3. SSM Run Command pulls from S3 to `/var/www/portfolio/` on EC2
 
-1. React app is built (`npm run build`)
-2. Build output is synced to S3
-3. AWS Systems Manager (SSM) Run Command pulls the new build from S3 to `/var/www/portfolio/` on the EC2 instance
+No SSH key or open port 22 required. Auth uses OIDC federation.
 
-No SSH key required. No port 22 open. Authentication uses OIDC federation — GitHub requests a short-lived AWS token at runtime; no credentials are stored in the repo.
+## Contact
 
-The workflow is at `.github/workflows/pr-checks.yml` in the repository root.
-
-### Infrastructure
-
-Infrastructure is managed with Terraform in `terraform/`. The EC2 instance user data bootstraps Nginx, Certbot (TLS), fail2ban, and UFW automatically on first launch — no manual server configuration needed.
-
-## 📁 Project Structure
-
-```
-devops-portfolio/
-├── public/
-│   └── index.html
-├── src/
-│   ├── components/
-│   │   ├── Navigation.tsx/css
-│   │   ├── Hero.tsx/css
-│   │   ├── Projects.tsx/css
-│   │   ├── Skills.tsx/css
-│   │   ├── Contact.tsx/css
-│   │   └── Footer.tsx/css
-│   ├── App.tsx
-│   ├── App.css
-│   ├── index.tsx
-│   └── index.css
-├── package.json
-└── README.md
-```
-
-## 🎨 Customization
-
-Update personal information in the component files:
-- Hero.tsx - name, title, certifications
-- Projects.tsx - project details and links
-- Skills.tsx - technical skills and certifications
-- Contact.tsx - email, phone, social links
-
-## 📧 Contact
-
-Justin Carter
+Justin Carter — Memphis, TN
 - Email: jcarter82@gmail.com
 - LinkedIn: [justin-carter-memphis](https://www.linkedin.com/in/justin-carter-memphis/)
 - GitHub: [Justinmemphis](https://github.com/Justinmemphis)
-
----
-
-Built with ❤️ in Memphis, TN

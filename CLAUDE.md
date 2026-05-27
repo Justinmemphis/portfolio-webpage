@@ -8,12 +8,15 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-DevOps portfolio website for Justin Carter. React/TypeScript frontend with Terraform-managed AWS infrastructure. Terraform provisions the EC2 instance and networking; the React build is deployed automatically via GitHub Actions (S3 sync + SSM Run Command) on every push to `main`.
+DevOps portfolio website for Justin Carter. Astro 5 frontend with React islands for interactive components, Terraform-managed AWS infrastructure, and a markdown-based blog. Terraform provisions the EC2 instance and networking; the site is deployed automatically via GitHub Actions (S3 sync + SSM Run Command) on every push to `main`.
 
 ## Repository Layout
 
-- `devops-portfolio/` — the actual application (React app + Terraform config)
-  - `src/components/` — React components, each with paired `.tsx` and `.css` files
+- `devops-portfolio/` — the actual application (Astro site + Terraform config)
+  - `src/components/` — React components (`.tsx` + `.css`), mounted as Astro islands
+  - `src/content/blog/` — markdown blog posts with frontmatter
+  - `src/pages/` — Astro page routes (`index.astro`, `blog/index.astro`, `blog/[slug].astro`)
+  - `src/layouts/` — shared `BaseLayout.astro` (head, nav, footer, analytics)
   - `terraform/` — AWS infrastructure (EC2, security group, Elastic IP, Route 53)
   - `build/` — production build output served by Nginx on EC2
 - Root contains repo-level docs, LICENSE, and `.gitignore`
@@ -23,9 +26,8 @@ DevOps portfolio website for Justin Carter. React/TypeScript frontend with Terra
 All commands run from `devops-portfolio/`:
 
 ```bash
-npm start          # Dev server on localhost:3000
+npm start          # Dev server on localhost:4321
 npm run build      # Production build to build/
-npm test           # Jest + React Testing Library
 ```
 
 ### Terraform (from `devops-portfolio/terraform/`)
@@ -50,11 +52,13 @@ To trigger a deploy, just push to `main`. The workflow is at `.github/workflows/
 
 ## Architecture
 
-- **React 19 + TypeScript** with strict mode. CRA-based (react-scripts).
-- **Framer Motion** for animations. **React Icons** for iconography.
-- **Styling**: Custom CSS with CSS variables defining a dark/cyberpunk theme (no CSS framework). Component-scoped CSS files.
+- **Astro 5** for routing, static generation, and the blog. React components are mounted as interactive islands (`client:load` / `client:visible`).
+- **React 19 + TypeScript** for interactive components. **Framer Motion** for animations. **React Icons** for iconography.
+- **Blog**: markdown files in `src/content/blog/` with Astro content collections. Frontmatter schema: `title`, `date`, `excerpt`, `tags`, `coverImage`. Drop a `.md` file and rebuild to publish.
+- **Styling**: Custom CSS with CSS variables defining a dark/cyberpunk theme. JetBrains Mono self-hosted via `@fontsource/jetbrains-mono`. No CSS framework.
+- **SEO**: `@astrojs/sitemap` generates `sitemap-index.xml` on every build. JSON-LD Person schema on homepage, BlogPosting schema on each post.
 - **Terraform**: AWS provider ~> 5.0. Modular layout (`modules/networking`, `modules/compute`, `modules/dns`, `modules/monitoring`) with a `bootstrap/` root for OIDC and S3/DynamoDB state. EC2 (Ubuntu 22.04) in an ASG, Elastic IP, Route 53 A/CNAME. User data bootstraps Nginx, Node.js 20.x, Certbot, fail2ban, and UFW.
-- **CI/CD**: GitHub Actions (`pr-checks.yml`) runs React tests/build and Terraform fmt/validate/plan on every push and PR. On merge to `main`, the deploy job syncs the build to S3 and runs SSM to update the EC2 instance. OIDC auth — no hardcoded secrets.
+- **CI/CD**: GitHub Actions (`pr-checks.yml`) runs Astro build and Terraform fmt/validate/plan on every push and PR. On merge to `main`, the deploy job syncs the build to S3 and runs SSM to update the EC2 instance. OIDC auth — no hardcoded secrets.
 
 ## Terraform Variables
 
