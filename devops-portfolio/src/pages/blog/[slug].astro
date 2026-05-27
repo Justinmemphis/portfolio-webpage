@@ -133,6 +133,17 @@ const blogPostingSchema = {
     line-height: 1.8;
   }
 
+  .post-body :global(p) {
+    max-width: none;
+    font-size: 1rem;
+    color: var(--text-primary);
+  }
+
+  .post-body :global(h1) {
+    font-size: 1.75rem;
+    margin: 2rem 0 1rem;
+  }
+
   .post-body :global(h2) {
     font-size: 1.5rem;
     color: var(--accent-secondary);
