@@ -3,7 +3,7 @@ title: "New Project - Memphis BBQ Review Website"
 date: 2026-05-28
 excerpt: "Announcement of my new DevOps Project - Memphis BBQ Project"
 tags: ["devops", "aws", "terraform"]
-coverImage: ![BBQ Website](/images/blog/new-project.png)
+coverImage: "/images/blog/new-project.png"
 ---
 
 I started a new project to test some devops concepts - see my live link here - [live project](https://d10tdoprvg920w.cloudfront.net)
