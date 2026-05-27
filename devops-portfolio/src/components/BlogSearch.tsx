@@ -66,6 +66,7 @@ export default function BlogSearch({ posts }: Props) {
       year: 'numeric',
       month: 'long',
       day: 'numeric',
+      timeZone: 'UTC',
     });
   }
 
