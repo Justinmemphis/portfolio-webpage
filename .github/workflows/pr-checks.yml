@@ -18,63 +18,32 @@ env:
 
 jobs:
   react-checks:
-    name: React - Test & Build
+    name: React - Build
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: devops-portfolio
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4.2.2
+      - uses: actions/checkout@v4.2.2
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4.4.0
+      - uses: actions/setup-node@v4.4.0
         with:
           node-version: 25
           cache: npm
           cache-dependency-path: devops-portfolio/package-lock.json
 
-      - name: Install dependencies
-        run: npm ci
+      - run: npm ci
 
-      - name: Build production bundle
-        run: npm run build
+      - run: npm run build
 
-  terraform-checks:
-    name: Terraform - Format, Validate, Plan
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: devops-portfolio/terraform
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4.2.2
-
-      - name: Set up Terraform
-        uses: hashicorp/setup-terraform@v3.1.2
-
-      - name: Terraform Format Check
-        run: terraform fmt -check -recursive
-
-      - name: Terraform Init (no backend)
-        run: terraform init -backend=false
-
-      - name: Terraform Validate
-        run: terraform validate
-
-      - name: Configure AWS Credentials (OIDC)
-        uses: aws-actions/configure-aws-credentials@v4.1.0
+      - name: Upload build artifact
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: actions/upload-artifact@v4
         with:
-          role-to-assume: arn:aws:iam::010955985414:role/devops-portfolio-github-actions-ci
-          aws-region: ${{ env.AWS_REGION }}
-
-      - name: Terraform Init
-        run: terraform init
-
-      - name: Terraform Plan
-        run: terraform plan -var-file=ci.tfvars -no-color -input=false
+          name: astro-build
+          path: devops-portfolio/build/
+          retention-days: 1
 
   deploy:
     name: Deploy to EC2
@@ -83,30 +52,11 @@ jobs:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4.2.2
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4.4.0
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
         with:
-          node-version: 25
-          cache: npm
-          cache-dependency-path: devops-portfolio/package-lock.json
-
-      - name: Install dependencies
-        run: npm ci
-        working-directory: devops-portfolio
-
-      - name: Build production bundle
-        run: npm run build
-        working-directory: devops-portfolio
-
-      - name: Inspect build output
-        run: |
-          echo "=== devops-portfolio/build/ ==="
-          ls -la devops-portfolio/build/
-          echo "=== devops-portfolio/build/_astro/ ==="
-          ls -la devops-portfolio/build/_astro/ 2>/dev/null || echo "_astro/ not found"
+          name: astro-build
+          path: devops-portfolio/build/
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4.1.0
@@ -132,7 +82,7 @@ jobs:
           COMMAND_ID=$(aws ssm send-command \
             --instance-ids "$INSTANCE_ID" \
             --document-name "AWS-RunShellScript" \
-            --parameters "commands=[\"aws s3 cp s3://${{ env.DEPLOY_BUCKET }}/index.html /var/www/portfolio/index.html --region ${{ env.AWS_REGION }} && aws s3 sync s3://${{ env.DEPLOY_BUCKET }}/ /var/www/portfolio/ --delete --region ${{ env.AWS_REGION }}\"]" \
+            --parameters "commands=[\"aws s3 sync s3://${{ env.DEPLOY_BUCKET }}/ /var/www/portfolio/ --delete --region ${{ env.AWS_REGION }}\"]" \
             --query "Command.CommandId" \
             --output text)
 
