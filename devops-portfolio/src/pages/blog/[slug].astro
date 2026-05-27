@@ -61,6 +61,14 @@ const blogPostingSchema = {
       {post.data.excerpt && <p class="excerpt">{post.data.excerpt}</p>}
     </header>
 
+    {post.data.coverImage && (
+      <img
+        class="cover-image"
+        src={post.data.coverImage}
+        alt={post.data.title}
+      />
+    )}
+
     <div class="post-body">
       <Content />
     </div>
@@ -125,6 +133,15 @@ const blogPostingSchema = {
     color: var(--text-secondary);
     font-style: italic;
     margin: 0;
+  }
+
+  .cover-image {
+    width: 100%;
+    max-height: 400px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    margin-bottom: 2rem;
   }
 
   /* Markdown body styles */
