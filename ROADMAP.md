@@ -128,6 +128,15 @@ The Terraform infrastructure migration (Phases 1–8) is complete. Next prioriti
 
 ---
 
+## 5. Claude Code Project Skills
+
+Custom slash commands to build for this repo's development workflow:
+
+- [ ] `/new-post` — Scaffold a new blog post in `src/content/blog/` with frontmatter pre-filled (title, UTC date, empty excerpt/tags/coverImage). Prevents the timezone bug class and removes manual frontmatter setup on every new post.
+- [ ] `/lighthouse` — Build the site locally and run `@lhci/cli` against the output to audit SEO, accessibility, and performance scores before pushing. Prototype for the CI Lighthouse integration in 4b; requires adding `@lhci/cli` to devDependencies.
+
+---
+
 ## Reference
 
 - [AWS-COST-ANALYSIS.md](AWS-COST-ANALYSIS.md) — cost breakdown per phase
