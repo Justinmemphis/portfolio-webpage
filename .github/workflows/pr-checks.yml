@@ -20,7 +20,6 @@ env:
   AWS_REGION: us-east-1
   DEPLOY_BUCKET: devops-portfolio-deploy-artifacts-010955985414
   EC2_NAME_TAG: devops-portfolio-webserver
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
   react-checks:
@@ -31,9 +30,9 @@ jobs:
         working-directory: devops-portfolio
 
     steps:
-      - uses: actions/checkout@v4.2.2
+      - uses: actions/checkout@v6.0.2
 
-      - uses: actions/setup-node@v4.4.0
+      - uses: actions/setup-node@v6.4.0
         with:
           node-version: 25
           cache: npm
@@ -45,7 +44,7 @@ jobs:
 
       - name: Upload build artifact
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7.0.1
         with:
           name: astro-build
           path: devops-portfolio/build/
@@ -59,13 +58,13 @@ jobs:
 
     steps:
       - name: Download build artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8.0.1
         with:
           name: astro-build
           path: devops-portfolio/build/
 
       - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4.1.0
+        uses: aws-actions/configure-aws-credentials@v6.1.2
         with:
           role-to-assume: arn:aws:iam::010955985414:role/devops-portfolio-github-actions-ci
           aws-region: ${{ env.AWS_REGION }}

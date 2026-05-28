@@ -2,7 +2,7 @@
 title: "New Project - Memphis BBQ Review Website"
 date: 2026-05-28
 excerpt: "Announcement of my new DevOps Project - Memphis BBQ Project"
-tags: ["devops", "aws", "terraform"]
+tags: ["devops", "aws", "terraform", "serverless", "lambda", "python", "dynamodb", "cognito", "github-actions", "devsecops"]
 coverImage: "/images/blog/new-project.png"
 ---
 

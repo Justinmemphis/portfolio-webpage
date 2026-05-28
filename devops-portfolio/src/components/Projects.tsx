@@ -158,7 +158,6 @@ const Projects: React.FC = () => {
           transition={{ duration: 0.6, delay: 0.4 }}
           className="projects-footer"
         >
-          <p>More projects coming soon as I continue my DevOps journey</p>
           <a href="https://github.com/Justinmemphis" className="btn" target="_blank" rel="noopener noreferrer">
             <FaGithub /> View GitHub Profile
           </a>
