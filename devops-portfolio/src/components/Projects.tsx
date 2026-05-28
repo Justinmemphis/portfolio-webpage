@@ -27,7 +27,7 @@ const Projects: React.FC = () => {
       demo: 'https://d10tdoprvg920w.cloudfront.net',
       highlights: [
         'Serverless backend: Lambda + API Gateway (HTTP), Python, DynamoDB with Bayesian ranking algorithm',
-        'Auth: Cognito User Pools with JWT; every endpoint requires authentication',
+        'Auth: Cognito User Pools with JWT; ratings require login, leaderboard is publicly viewable',
         'Multi-environment Terraform (dev/prod) with OIDC GitHub Actions — zero static AWS credentials',
         'Security pipeline: Checkov IaC scanning, Ruff + pip-audit, 69 pytest tests gate every deploy',
         'Append-only audit log, per-user rating enforcement via composite keys, CloudWatch alarms'
