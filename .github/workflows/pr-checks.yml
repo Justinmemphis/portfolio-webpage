@@ -3,8 +3,14 @@ name: PR Checks
 on:
   push:
     branches: [main]
+    paths:
+      - 'devops-portfolio/**'
+      - '.github/workflows/**'
   pull_request:
     branches: [main]
+    paths:
+      - 'devops-portfolio/**'
+      - '.github/workflows/**'
 
 permissions:
   id-token: write
