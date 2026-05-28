@@ -1,7 +1,7 @@
 import React, { JSX } from 'react';
 import { motion } from 'framer-motion';
 import { FaGithub, FaCode } from 'react-icons/fa';
-import { SiTerraform } from 'react-icons/si';
+import { SiTerraform, SiAwslambda } from 'react-icons/si';
 import './Projects.css';
 
 interface Project {
@@ -17,6 +17,22 @@ interface Project {
 
 const Projects: React.FC = () => {
   const projects: Project[] = [
+    {
+      title: 'Memphis BBQ Ranking Platform — Serverless AWS',
+      description: 'Crowdsourced restaurant ranking app built on a fully serverless AWS stack: Lambda + API Gateway, DynamoDB, Cognito, and CloudFront. Multi-environment Terraform infrastructure deployed through a security-hardened CI/CD pipeline with no static credentials.',
+      tags: ['Lambda', 'API Gateway', 'DynamoDB', 'Cognito', 'CloudFront', 'Terraform', 'Python', 'GitHub Actions', 'OIDC', 'Checkov', 'S3', 'SSM'],
+      icon: <SiAwslambda />,
+      status: 'in-progress',
+      github: 'https://github.com/justinmemphis/memphis-bbq-ranking-platform',
+      demo: 'https://d10tdoprvg920w.cloudfront.net',
+      highlights: [
+        'Serverless backend: Lambda + API Gateway (HTTP), Python, DynamoDB with Bayesian ranking algorithm',
+        'Auth: Cognito User Pools with JWT; every endpoint requires authentication',
+        'Multi-environment Terraform (dev/prod) with OIDC GitHub Actions — zero static AWS credentials',
+        'Security pipeline: Checkov IaC scanning, Ruff + pip-audit, 69 pytest tests gate every deploy',
+        'Append-only audit log, per-user rating enforcement via composite keys, CloudWatch alarms'
+      ]
+    },
     {
       title: 'AWS Infrastructure Portfolio — Terraform IaC',
       description: 'Production-grade AWS infrastructure built entirely with Terraform across 8 phases: VPC networking, auto-scaling compute, modular DNS, CI/CD with OIDC auth, CloudWatch observability, and server hardening — all managed as code.',
