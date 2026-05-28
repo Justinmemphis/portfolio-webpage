@@ -22,7 +22,7 @@ const Projects: React.FC = () => {
       description: 'Crowdsourced restaurant ranking app built on a fully serverless AWS stack: Lambda + API Gateway, DynamoDB, Cognito, and CloudFront. Multi-environment Terraform infrastructure deployed through a security-hardened CI/CD pipeline with no static credentials.',
       tags: ['Lambda', 'API Gateway', 'DynamoDB', 'Cognito', 'CloudFront', 'Terraform', 'Python', 'GitHub Actions', 'OIDC', 'Checkov', 'S3', 'SSM'],
       icon: <SiAwslambda />,
-      status: 'in-progress',
+      status: 'live',
       github: 'https://github.com/justinmemphis/memphis-bbq-ranking-platform',
       demo: 'https://d10tdoprvg920w.cloudfront.net',
       highlights: [
