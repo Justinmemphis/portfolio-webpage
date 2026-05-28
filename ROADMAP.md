@@ -4,40 +4,47 @@ Goals and initiatives for the portfolio site, ordered by priority. Infrastructur
 
 ---
 
-## 1. Blog (Highest Priority)
+## 1. Blog ✅ (largely complete)
 
 A blog section where posts can be written and shared via LinkedIn or other social platforms.
 
-**Goals:**
-- Route: `/blog` index listing all posts; `/blog/<slug>` for individual posts
-- Posts written in Markdown, stored as flat files in `src/posts/` (no CMS, no database)
-- Build-time rendering via a Markdown parser (e.g. `react-markdown` + frontmatter via `gray-matter`)
-- Each post has frontmatter: `title`, `date`, `slug`, `excerpt`, `tags`
-- Social sharing: Open Graph meta tags on each post page (title, description, image)
-- RSS feed (`/rss.xml`) so readers can subscribe
-- Responsive, readable typography — optimized for long-form reading
-- Easy workflow: drop a `.md` file in `src/posts/`, rebuild, deploy
+**Implemented:**
+- [x] Route: `/blog` index listing all posts; `/blog/<slug>` for individual posts
+- [x] Posts written in Markdown, stored in `src/content/blog/` (Astro content collections — no CMS, no database)
+- [x] Build-time rendering via Astro SSG and content collections (supersedes react-markdown/gray-matter approach)
+- [x] Frontmatter schema: `title`, `date`, `excerpt`, `tags`, `coverImage`
+- [x] Open Graph meta tags on each post page (title, description, og:image)
+- [x] BlogPosting JSON-LD structured data on each post
+- [x] Search bar + tag filter (React island using Fuse.js)
+- [x] Responsive, readable typography with markdown body styles
+- [x] Cover image rendered on post pages
+- [x] Easy workflow: drop a `.md` file in `src/content/blog/`, push to main, auto-deploys
+- [x] First post published to validate end-to-end
 
-**Open questions:**
-- Static generation vs. runtime fetch? (CRA doesn't support SSG natively — consider migrating to Vite + a simple static approach, or using `import.meta.glob` if switching to Vite)
-- Image hosting for post images: S3 public bucket vs. checked into repo?
+**Still pending:**
+- [ ] RSS feed (`/rss.xml`) — use `@astrojs/rss`
+
+**Resolved decisions:**
+- Static generation: Astro SSG (no CRA/Vite needed)
+- Image hosting: images checked into repo under `public/images/blog/`
 
 ---
 
-## 2. SEO Optimization
+## 2. SEO Optimization (largely complete)
 
-**Goals:**
-- Add `<meta name="description">` and canonical `<link>` tags to all pages
-- Structured data (JSON-LD): `Person` schema on homepage, `BlogPosting` schema on each post
-- Open Graph and Twitter Card tags on all pages
-- `sitemap.xml` generated at build time and submitted to Google Search Console
-- `robots.txt` present and correct
-- All page `<title>` tags unique and descriptive (not just "Justin Carter")
-- Core Web Vitals: LCP, CLS, FID targets met (monitor via Search Console)
-- Register site with Google Search Console and submit sitemap
+**Implemented:**
+- [x] `<meta name="description">` on all pages (via BaseLayout)
+- [x] Open Graph and og:title / og:description on all pages; og:image on blog posts
+- [x] `Person` JSON-LD schema on homepage; `BlogPosting` schema on each post
+- [x] `sitemap.xml` generated at build time via `@astrojs/sitemap`
+- [x] `robots.txt` present and correct
+- [x] Unique, descriptive `<title>` tags on all pages
 
-**Baseline check:**
-Run Lighthouse SEO audit and record current score before starting.
+**Still pending:**
+- [ ] Canonical `<link rel="canonical">` tag in BaseLayout
+- [ ] Twitter Card meta tags (`twitter:card`, `twitter:title`, `twitter:description`, `twitter:image`)
+- [ ] Core Web Vitals: LCP, CLS, FID — monitor via Google Search Console
+- [ ] Register site with Google Search Console and submit sitemap
 
 ---
 
@@ -60,32 +67,32 @@ Run Lighthouse SEO audit and record current score before starting.
 
 ---
 
-## 3a. CRA → Astro Migration (in progress)
+## 3a. CRA → Astro Migration ✅ (complete)
 
-Replacing CRA with Astro. Astro has first-class markdown/content support, built-in content collections, and can keep existing React components as interactive islands.
+Replaced CRA with Astro. Astro has first-class markdown/content support, built-in content collections, and keeps existing React components as interactive islands.
 
-### Phase 1 — Core setup
+### Phase 1 — Core setup ✅
 - [x] Document migration steps
-- [ ] Install `astro`, `@astrojs/react`, remove `react-scripts`
-- [ ] Add `astro.config.mjs` (React integration, static output, `outDir: 'build'` to keep CI unchanged)
-- [ ] Update `tsconfig.json` to extend Astro's base config
-- [ ] Update `package.json` scripts: `start` → `astro dev`, `build` → `astro build`
-- [ ] Migrate `public/index.html` → `src/layouts/BaseLayout.astro` (head tags, analytics, meta)
-- [ ] Create `src/pages/index.astro` — homepage that mounts existing React components as islands (`client:load` / `client:visible`)
-- [ ] Delete CRA-only files: `src/react-app-env.d.ts`, `src/reportWebVitals.ts`, `src/setupTests.ts`
-- [ ] Verify dev server and production build work
-- [ ] Confirm CI passes (GitHub Actions `npm run build` is unchanged)
+- [x] Install `astro`, `@astrojs/react`, remove `react-scripts`
+- [x] `astro.config.mjs` (React integration, static output, `outDir: 'build'`)
+- [x] `tsconfig.json` extended from `astro/tsconfigs/strict`
+- [x] `package.json` scripts: `start` → `astro dev`, `build` → `astro build`
+- [x] `src/layouts/BaseLayout.astro` (head tags, analytics, meta)
+- [x] `src/pages/index.astro` — homepage mounts React components as islands (`client:load` / `client:visible`)
+- [x] CRA-only files deleted (`react-app-env.d.ts`, `reportWebVitals.ts`, `setupTests.ts`)
+- [x] Dev server and production build working
+- [x] CI passes (GitHub Actions `npm run build`)
 
-### Phase 2 — Blog
-- [ ] Define content collection in `src/content/config.ts` — schema: `title`, `date`, `slug`, `tags`, `excerpt`, optional `coverImage`
-- [ ] Create `src/content/blog/` — drop `.md` files here to publish
-- [ ] `src/pages/blog/index.astro` — listing page, sorted by date desc, with tag filter + search bar (React island using Fuse.js)
-- [ ] `src/pages/blog/[slug].astro` — individual post page with `getStaticPaths`
-- [ ] `src/layouts/BlogLayout.astro` — post layout with title, date, tags, reading time
-- [ ] Images — `public/blog/` for post screenshots, referenced as `/blog/image.png` in markdown
-- [ ] Open Graph meta tags per post (`title`, `description`, `og:image`)
-- [ ] Add Blog link to Navigation component
-- [ ] Write first post to validate end-to-end
+### Phase 2 — Blog ✅
+- [x] Content collection defined in `src/content.config.ts` — schema: `title`, `date`, `tags`, `excerpt`, `coverImage`
+- [x] `src/content/blog/` — drop `.md` files here to publish
+- [x] `src/pages/blog/index.astro` — listing page, sorted by date desc, with tag filter + search (Fuse.js island)
+- [x] `src/pages/blog/[slug].astro` — individual post page with `getStaticPaths`
+- [x] Post layout with title, date, tags, cover image (inline in `[slug].astro`)
+- [x] Images in `public/images/blog/`, referenced as `/images/blog/image.png` in markdown
+- [x] Open Graph meta tags per post
+- [x] Blog link in Navigation component
+- [x] First post written and deployed
 
 ---
 
