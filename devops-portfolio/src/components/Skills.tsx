@@ -5,14 +5,18 @@ import {
   FaGitAlt,
   FaPython,
   FaLinux,
-  FaNode
+  FaNode,
+  FaShieldAlt,
+  FaLock,
+  FaKey
 } from 'react-icons/fa';
 import {
   SiTerraform,
   SiNginx,
   SiJavascript,
   SiReact,
-  SiGithubactions
+  SiGithubactions,
+  SiAwslambda
 } from 'react-icons/si';
 import './Skills.css';
 
@@ -28,12 +32,18 @@ const Skills: React.FC = () => {
     // Cloud & Infrastructure
     { name: 'AWS', icon: <FaAws />, level: 4, category: 'Cloud & Infrastructure' },
     { name: 'Terraform', icon: <SiTerraform />, level: 4, category: 'Cloud & Infrastructure' },
+    { name: 'Lambda', icon: <SiAwslambda />, level: 3, category: 'Cloud & Infrastructure' },
     { name: 'Linux', icon: <FaLinux />, level: 4, category: 'Cloud & Infrastructure' },
     { name: 'Nginx', icon: <SiNginx />, level: 4, category: 'Cloud & Infrastructure' },
 
     // DevOps & CI/CD
     { name: 'GitHub Actions', icon: <SiGithubactions />, level: 4, category: 'DevOps & CI/CD' },
     { name: 'Git', icon: <FaGitAlt />, level: 5, category: 'DevOps & CI/CD' },
+
+    // Security & Compliance
+    { name: 'Checkov', icon: <FaShieldAlt />, level: 3, category: 'Security & Compliance' },
+    { name: 'pip-audit', icon: <FaLock />, level: 3, category: 'Security & Compliance' },
+    { name: 'OIDC Auth', icon: <FaKey />, level: 3, category: 'Security & Compliance' },
 
     // Development
     { name: 'JavaScript', icon: <SiJavascript />, level: 5, category: 'Development' },
