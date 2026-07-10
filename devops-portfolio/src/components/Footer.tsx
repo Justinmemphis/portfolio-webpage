@@ -10,7 +10,7 @@ const Footer: React.FC = () => {
       <div className="footer-content">
         <div className="footer-section">
           <h4>Justin Carter</h4>
-          <p>DevOps Engineer building secure, scalable cloud infrastructure</p>
+          <p>Business Solutions Developer working across systems integration, data, and cloud automation</p>
         </div>
 
         <div className="footer-section">
@@ -19,7 +19,7 @@ const Footer: React.FC = () => {
             <a href="#projects">Projects</a>
             <a href="#skills">Skills</a>
             <a href="#contact">Contact</a>
-            <a href="/resume.pdf" download>Resume</a>
+            <a href="/blog">Blog</a>
           </div>
         </div>
 

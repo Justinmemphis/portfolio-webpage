@@ -68,13 +68,6 @@ const Navigation: React.FC = () => {
               {item.label}
             </a>
           ))}
-          <a
-            href="/resume.pdf"
-            className="nav-link nav-cta"
-            download
-          >
-            Resume
-          </a>
         </div>
 
         <button

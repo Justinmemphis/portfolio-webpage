@@ -8,7 +8,11 @@ import {
   FaNode,
   FaShieldAlt,
   FaLock,
-  FaKey
+  FaKey,
+  FaChartBar,
+  FaNetworkWired,
+  FaCogs,
+  FaPlug
 } from 'react-icons/fa';
 import {
   SiTerraform,
@@ -16,7 +20,8 @@ import {
   SiJavascript,
   SiReact,
   SiGithubactions,
-  SiAwslambda
+  SiAwslambda,
+  SiHubspot
 } from 'react-icons/si';
 import './Skills.css';
 
@@ -29,6 +34,13 @@ interface Skill {
 
 const Skills: React.FC = () => {
   const skills: Skill[] = [
+    // Business Systems & Integration
+    { name: 'Systems Integration', icon: <FaNetworkWired />, level: 4, category: 'Business Systems & Integration' },
+    { name: 'Process Automation', icon: <FaCogs />, level: 4, category: 'Business Systems & Integration' },
+    { name: 'Power BI', icon: <FaChartBar />, level: 4, category: 'Business Systems & Integration' },
+    { name: 'HubSpot', icon: <SiHubspot />, level: 4, category: 'Business Systems & Integration' },
+    { name: 'REST APIs', icon: <FaPlug />, level: 4, category: 'Business Systems & Integration' },
+
     // Cloud & Infrastructure
     { name: 'AWS', icon: <FaAws />, level: 4, category: 'Cloud & Infrastructure' },
     { name: 'Terraform', icon: <SiTerraform />, level: 4, category: 'Cloud & Infrastructure' },
@@ -120,7 +132,7 @@ const Skills: React.FC = () => {
         >
           <h2>Technical Skills</h2>
           <p className="section-subtitle">
-            Cloud infrastructure, automation, and development expertise
+            Business systems, data, cloud infrastructure, and automation
           </p>
         </motion.div>
 

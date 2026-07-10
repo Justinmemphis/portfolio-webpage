@@ -16,7 +16,7 @@ const Contact: React.FC = () => {
         >
           <h2>Get In Touch</h2>
           <p className="section-subtitle">
-            Let's discuss DevOps opportunities, cloud infrastructure, or collaboration
+            Talk systems integration, cloud, automation, or Memphis BBQ
           </p>
         </motion.div>
 

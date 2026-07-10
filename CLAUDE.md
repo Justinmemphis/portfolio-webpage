@@ -4,7 +4,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Rules
 
-- **Never push to any remote branch without explicit user approval.** Always ask before running `git push`.
+- **Claude may push feature branches and open PRs on GitHub without asking.** The user reviews and approves/merges PRs on GitHub.
+- **Never push directly to `main`.** Merging to `main` triggers a production deploy, so all changes must go through a PR.
 
 ## Project Overview
 
