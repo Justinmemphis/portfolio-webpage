@@ -4,7 +4,7 @@ import './Hero.css';
 
 const terminalLines = [
   { text: '$ whoami', delay: 0 },
-  { text: '> Justin Carter - DevOps Engineer', delay: 800 },
+  { text: '> Justin Carter - Business Solutions Developer', delay: 800 },
   { text: '$ cat certifications.txt', delay: 1600 },
   { text: '✓ AWS Solutions Architect Associate', delay: 2200 },
   { text: '✓ AWS Cloud Practitioner', delay: 2600 },
@@ -12,7 +12,7 @@ const terminalLines = [
   { text: '✓ Cisco CCNA', delay: 3400 },
   { text: '⏳ HashiCorp Terraform Associate (In Progress)', delay: 3800 },
   { text: '$ echo $MISSION', delay: 4600 },
-  { text: '> Automating infrastructure. Securing cloud environments.', delay: 5200 },
+  { text: '> Connecting systems. Automating workflows. Building in the cloud.', delay: 5200 },
   { text: '$ deployment --status', delay: 6000 },
   { text: '✓ Infrastructure provisioned', delay: 6400 },
   { text: '✓ Security scans passed', delay: 6800 },
@@ -51,7 +51,7 @@ const Hero: React.FC = () => {
                 <span className="btn-minimize"></span>
                 <span className="btn-maximize"></span>
               </div>
-              <div className="terminal-title">justin@devops-portfolio:~</div>
+              <div className="terminal-title">justin@justinmemphis:~</div>
             </div>
             <div className="terminal-body">
               {displayedText.map((line, index) => (
@@ -78,7 +78,7 @@ const Hero: React.FC = () => {
         >
           <h1>Justin Carter</h1>
           <p className="hero-subtitle">
-            DevOps Engineer | Cloud Infrastructure Specialist | Security-First Automation
+            Business Solutions Developer II | Systems Integration, Power BI, HubSpot & Cloud Automation
           </p>
           <div className="hero-location">
             <span>📍 Memphis, TN</span>
@@ -88,12 +88,11 @@ const Hero: React.FC = () => {
           <div className="hero-buttons">
             <a href="#projects" className="btn">View Projects</a>
             <a href="#contact" className="btn btn-secondary">Get In Touch</a>
-            <a href="/resume.pdf" download className="btn btn-secondary">Download Resume</a>
           </div>
           <div className="hero-stats">
             <div className="stat">
-              <div className="stat-number">5+</div>
-              <div className="stat-label">Certifications</div>
+              <div className="stat-number">2</div>
+              <div className="stat-label">Live AWS Projects</div>
             </div>
             <div className="stat">
               <div className="stat-number">100%</div>

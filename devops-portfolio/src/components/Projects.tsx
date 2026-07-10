@@ -18,7 +18,7 @@ interface Project {
 const Projects: React.FC = () => {
   const projects: Project[] = [
     {
-      title: 'Memphis BBQ Ranking Platform — Serverless AWS',
+      title: 'Memphis BBQ Ranking Platform — Serverless AWS, Terraform & CI/CD Project',
       description: 'Crowdsourced restaurant ranking app built on a fully serverless AWS stack: Lambda + API Gateway, DynamoDB, Cognito, and CloudFront. Multi-environment Terraform infrastructure deployed through a security-hardened CI/CD pipeline with no static credentials.',
       tags: ['Lambda', 'API Gateway', 'DynamoDB', 'Cognito', 'CloudFront', 'Terraform', 'Python', 'GitHub Actions', 'OIDC', 'Checkov', 'S3', 'SSM'],
       icon: <SiAwslambda />,
@@ -34,8 +34,8 @@ const Projects: React.FC = () => {
       ]
     },
     {
-      title: 'AWS Infrastructure Portfolio — Terraform IaC',
-      description: 'Production-grade AWS infrastructure built entirely with Terraform across 8 phases: VPC networking, auto-scaling compute, modular DNS, CI/CD with OIDC auth, CloudWatch observability, and server hardening — all managed as code.',
+      title: 'Production-Style AWS EC2 Environment — Terraform, OIDC CI/CD & Linux Hardening',
+      description: 'Production-style AWS environment provisioned entirely with Infrastructure as Code: VPC networking, a single EC2 managed by Auto Scaling for self-healing recovery, least-privilege IAM, secretless CI/CD via GitHub Actions (OIDC), CloudWatch observability, and Linux hardening.',
       tags: ['Terraform', 'AWS', 'VPC', 'Auto Scaling', 'GitHub Actions', 'OIDC', 'SSM', 'CloudWatch', 'Route 53', 'Nginx', 'SSL/TLS'],
       icon: <SiTerraform />,
       status: 'live',
@@ -91,9 +91,9 @@ const Projects: React.FC = () => {
           transition={{ duration: 0.6 }}
           className="section-header"
         >
-          <h2>DevOps Projects</h2>
+          <h2>Cloud & Automation Projects</h2>
           <p className="section-subtitle">
-            Infrastructure automation, cloud deployments, and security implementations
+            Hands-on projects exploring AWS, Terraform, CI/CD, and security-minded automation
           </p>
         </motion.div>
 
