@@ -1,5 +1,7 @@
 # Production-Style AWS Infrastructure
 
+NOTE 08/21/2026 - below is mostly what I had an AI write for me on this project. It did okay but sometimes it's not accurate or up-to-date on things. I'll be rewriting this some time in the future in my own voice.
+
 A production-style AWS infrastructure project built with Terraform and deployed through GitHub Actions using OpenID Connect (OIDC) federation.
 
 This repository provisions and manages the infrastructure behind my personal website. The focus is reproducible infrastructure, secure deployment, Linux hardening, monitoring, and operational practices that reduce manual configuration and make the environment easier to maintain.
